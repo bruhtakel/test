@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevHawk | Your Developer Stats</title>
+    <title>DevHawk | Developer Mirror</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* 1. Animated Gradient Background */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(
-                -45deg,
-                #020617, #0f172a, #1e1b4b, #0a0f1e, #171219
-            );
+            background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #0a0f1e, #171219);
             background-size: 400% 400%;
             animation: gradientShift 20s ease infinite; 
             color: white;
@@ -28,7 +24,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* 2. Optimized "Antigravity" Glass Effect */
         .glass {
             background: rgba(15, 23, 42, 0.4) !important; 
             backdrop-filter: blur(16px);
@@ -43,7 +38,6 @@
             box-shadow: 0 15px 40px -10px rgba(59, 130, 246, 0.2); 
         }
 
-        /* 3. Special Styling */
         .gh-chart { filter: hue-rotate(180deg) invert(1) opacity(0.8); transition: opacity 0.3s; }
         .gh-chart:hover { opacity: 1; filter: hue-rotate(180deg) invert(1) drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); }
 
@@ -64,7 +58,6 @@
 
     <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
         <h1 class="text-2xl font-800 tracking-tighter text-white">DEV<span class="text-blue-500">HAWK</span></h1>
-        
         <div class="glass px-2 py-1 rounded-2xl hidden md:flex gap-1 z-50">
             <button onclick="showTab('dash')" id="btn-dash" class="px-6 py-2 rounded-xl text-sm font-bold transition-all bg-white/10 hover:bg-white/20">Dashboard</button>
             <button onclick="showTab('pomo')" id="btn-pomo" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20">Pomodoro</button>
