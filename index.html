@@ -6,7 +6,7 @@
     <title>DevHawk | Developer Mirror</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
+    <style>
         /* 1. Softer, Premium Blue/Indigo Gradient */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -33,12 +33,10 @@
 
         /* 2. Advanced "macOS" Glassmorphism */
         .glass {
-            /* A subtle gradient INSIDE the glass card itself */
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.05); 
-            /* Inset shadow creates the realistic frosted "edge highlight" */
             box-shadow: 
                 inset 1px 1px 0px rgba(255, 255, 255, 0.1), 
                 0 10px 40px 0 rgba(0, 0, 0, 0.3); 
@@ -53,7 +51,6 @@
                 0 15px 40px -10px rgba(59, 130, 246, 0.4); 
         }
 
-        /* Special Styling */
         .gh-chart { filter: hue-rotate(180deg) invert(1) opacity(0.8); transition: opacity 0.3s; }
         .gh-chart:hover { opacity: 1; filter: hue-rotate(180deg) invert(1) drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); }
 
@@ -76,7 +73,7 @@
         <h1 class="text-2xl font-800 tracking-tighter text-white">DEV<span class="text-blue-500">HAWK</span></h1>
         <div class="glass px-2 py-1 rounded-2xl hidden md:flex gap-1 z-50">
             <button onclick="showTab('dash')" id="btn-dash" class="px-6 py-2 rounded-xl text-sm font-bold transition-all bg-white/10 hover:bg-white/20">Dashboard</button>
-            <button onclick="showTab('pomo')" id="btn-pomo" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20">Pomodoro</button>
+            <button onclick="showTab('pomo')" id="btn-pomo" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20">Deep Work</button>
             <button onclick="showTab('compare')" id="btn-compare" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20 text-purple-400">Compare</button>
         </div>
     </nav>
@@ -84,11 +81,12 @@
     <main class="max-w-7xl mx-auto px-4 md:px-8 mt-4">
         
         <div id="tab-dash" class="space-y-8 animate-in fade-in duration-500">
+            
             <div class="glass p-4 rounded-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
                 <select id="search-type" class="bg-slate-800 text-white border border-white/10 rounded-xl px-4 py-2 outline-none text-sm font-bold focus:ring-2 focus:ring-blue-500">
-                    <option value="github">Search GitHub</option>
-                    <option value="leetcode">Search LeetCode</option>
-                    <option value="codeforces">Search Codeforces</option>
+                    <option class="bg-slate-900 text-white" value="github">Search GitHub</option>
+                    <option class="bg-slate-900 text-white" value="leetcode">Search LeetCode</option>
+                    <option class="bg-slate-900 text-white" value="codeforces">Search Codeforces</option>
                 </select>
                 <input id="global-search" type="text" placeholder="Enter developer username..." class="bg-slate-900/50 border border-white/10 rounded-xl flex-1 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                 <button onclick="handleSearch()" class="bg-blue-600 hover:bg-blue-500 px-8 py-2 rounded-xl text-sm font-bold transition">Search</button>
@@ -178,7 +176,21 @@
         </div>
 
         <div id="tab-pomo" class="hidden flex flex-col items-center pt-10 animate-in fade-in duration-500">
-            <h2 class="text-4xl font-extrabold mb-8 text-white">Pomodoro Clock</h2>
+            <h2 class="text-4xl font-extrabold mb-4 text-white">Deep Work Engine</h2>
+            
+            <div class="glass p-6 rounded-3xl w-full max-w-md mb-8 text-center border border-white/10 shadow-lg">
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">Current Focus Goal</h3>
+                <div id="sugg-placeholder" class="text-slate-500 italic mb-4">Click below to generate an interview question</div>
+                
+                <div id="sugg-content" class="hidden mb-4">
+                    <h4 id="sugg-title" class="text-2xl font-black text-white mb-1">Problem Title</h4>
+                    <span id="sugg-diff" class="text-xs font-black uppercase bg-slate-900 px-3 py-1 rounded-full">Difficulty</span>
+                    <a id="sugg-btn" href="#" target="_blank" class="mt-4 block bg-yellow-500/20 text-yellow-500 border border-yellow-500/50 px-4 py-2 rounded-xl font-bold text-sm hover:bg-yellow-500 hover:text-black transition">Solve on LeetCode ↗</a>
+                </div>
+                
+                <button onclick="suggestProblem()" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-xl text-sm font-bold transition shadow-md">Generate Problem</button>
+            </div>
+
             <div id="circle" class="timer-circle mb-8"><span id="display" class="text-6xl font-black text-white">25:00</span></div>
             <div class="flex flex-wrap gap-4 mb-10 justify-center max-w-md">
                 <button onclick="setTime(25)" class="glass px-6 py-2 rounded-full text-sm font-bold hover:border-blue-500 transition">25m</button>
@@ -199,9 +211,9 @@
             
             <div class="flex justify-center mb-6">
                 <select id="compare-type" class="glass text-white rounded-xl px-6 py-3 outline-none font-bold focus:border-purple-500">
-                    <option value="github">Battle via GitHub</option>
-                    <option value="leetcode">Battle via LeetCode</option>
-                    <option value="codeforces">Battle via Codeforces</option>
+                    <option class="bg-slate-900 text-white" value="github">Battle via GitHub</option>
+                    <option class="bg-slate-900 text-white" value="leetcode">Battle via LeetCode</option>
+                    <option class="bg-slate-900 text-white" value="codeforces">Battle via Codeforces</option>
                 </select>
             </div>
 
@@ -230,6 +242,33 @@
 
     <script>
         const LC_API = 'https://leetcode-api-faisalshohag.vercel.app/';
+
+        // BLIND 75 DATABASE 
+        const blind75 = [
+            { t: "Two Sum", d: "Easy", l: "two-sum", c: "text-green-400" },
+            { t: "Best Time to Buy & Sell Stock", d: "Easy", l: "best-time-to-buy-and-sell-stock", c: "text-green-400" },
+            { t: "Contains Duplicate", d: "Easy", l: "contains-duplicate", c: "text-green-400" },
+            { t: "Valid Anagram", d: "Easy", l: "valid-anagram", c: "text-green-400" },
+            { t: "Product of Array Except Self", d: "Medium", l: "product-of-array-except-self", c: "text-yellow-400" },
+            { t: "Maximum Subarray", d: "Medium", l: "maximum-subarray", c: "text-yellow-400" },
+            { t: "3Sum", d: "Medium", l: "3sum", c: "text-yellow-400" },
+            { t: "Container With Most Water", d: "Medium", l: "container-with-most-water", c: "text-yellow-400" },
+            { t: "Merge Intervals", d: "Medium", l: "merge-intervals", c: "text-yellow-400" },
+            { t: "Merge K Sorted Lists", d: "Hard", l: "merge-k-sorted-lists", c: "text-red-400" },
+            { t: "Minimum Window Substring", d: "Hard", l: "minimum-window-substring", c: "text-red-400" },
+            { t: "Reverse Linked List", d: "Easy", l: "reverse-linked-list", c: "text-green-400" },
+            { t: "Longest Repeating Character Replacement", d: "Medium", l: "longest-repeating-character-replacement", c: "text-yellow-400" }
+        ];
+
+        function suggestProblem() {
+            const q = blind75[Math.floor(Math.random() * blind75.length)];
+            document.getElementById('sugg-placeholder').classList.add('hidden');
+            document.getElementById('sugg-content').classList.remove('hidden');
+            document.getElementById('sugg-title').innerText = q.t;
+            document.getElementById('sugg-diff').innerText = q.d;
+            document.getElementById('sugg-diff').className = `text-xs font-black uppercase px-3 py-1 rounded-full bg-slate-900 ${q.c}`;
+            document.getElementById('sugg-btn').href = `https://leetcode.com/problems/${q.l}/`;
+        }
 
         window.onload = async () => {
             const savedGH = localStorage.getItem('my-github');
