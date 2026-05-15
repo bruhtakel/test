@@ -6,12 +6,19 @@
     <title>DevHawk | Developer Mirror</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
+<style>
+        /* 1. Softer, Premium Blue/Indigo Gradient */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #0a0f1e, #171219);
+            background: linear-gradient(
+                -45deg, 
+                #0f172a, /* Slate */
+                #1e3a8a, /* Deep Blue */
+                #312e81, /* Indigo */
+                #020617  /* Midnight */
+            );
             background-size: 400% 400%;
-            animation: gradientShift 20s ease infinite; 
+            animation: gradientShift 15s ease infinite; 
             color: white;
             overflow-x: hidden;
             margin: 0;
@@ -24,20 +31,29 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* 2. Advanced "macOS" Glassmorphism */
         .glass {
-            background: rgba(15, 23, 42, 0.4) !important; 
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            /* A subtle gradient INSIDE the glass card itself */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            /* Inset shadow creates the realistic frosted "edge highlight" */
+            box-shadow: 
+                inset 1px 1px 0px rgba(255, 255, 255, 0.1), 
+                0 10px 40px 0 rgba(0, 0, 0, 0.3); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
         }
 
+        /* 3. Smooth Hover Float */
         .glass:hover {
-            transform: translateY(-4px); 
-            box-shadow: 0 15px 40px -10px rgba(59, 130, 246, 0.2); 
+            transform: translateY(-5px); 
+            box-shadow: 
+                inset 1px 1px 0px rgba(255, 255, 255, 0.2), 
+                0 15px 40px -10px rgba(59, 130, 246, 0.4); 
         }
 
+        /* Special Styling */
         .gh-chart { filter: hue-rotate(180deg) invert(1) opacity(0.8); transition: opacity 0.3s; }
         .gh-chart:hover { opacity: 1; filter: hue-rotate(180deg) invert(1) drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); }
 
@@ -49,7 +65,7 @@
         }
         .timer-circle.active {
             border-color: #3b82f6;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.3);
         }
         ::-webkit-scrollbar { display: none; }
     </style>
