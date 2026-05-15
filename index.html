@@ -7,16 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* 1. Softer, Premium Blue/Indigo Gradient */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(
-                -45deg, 
-                #0f172a, /* Slate */
-                #1e3a8a, /* Deep Blue */
-                #312e81, /* Indigo */
-                #020617  /* Midnight */
-            );
+            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #312e81, #020617);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite; 
             color: white;
@@ -31,24 +24,18 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* 2. Advanced "macOS" Glassmorphism */
         .glass {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.05); 
-            box-shadow: 
-                inset 1px 1px 0px rgba(255, 255, 255, 0.1), 
-                0 10px 40px 0 rgba(0, 0, 0, 0.3); 
+            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.1), 0 10px 40px 0 rgba(0, 0, 0, 0.3); 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
         }
 
-        /* 3. Smooth Hover Float */
         .glass:hover {
             transform: translateY(-5px); 
-            box-shadow: 
-                inset 1px 1px 0px rgba(255, 255, 255, 0.2), 
-                0 15px 40px -10px rgba(59, 130, 246, 0.4); 
+            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.2), 0 15px 40px -10px rgba(59, 130, 246, 0.4); 
         }
 
         .gh-chart { filter: hue-rotate(180deg) invert(1) opacity(0.8); transition: opacity 0.3s; }
@@ -75,13 +62,13 @@
             <button onclick="showTab('dash')" id="btn-dash" class="px-6 py-2 rounded-xl text-sm font-bold transition-all bg-white/10 hover:bg-white/20">Dashboard</button>
             <button onclick="showTab('pomo')" id="btn-pomo" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20">Deep Work</button>
             <button onclick="showTab('compare')" id="btn-compare" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20 text-purple-400">Compare</button>
+            <button onclick="showTab('goals')" id="btn-goals" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20 text-green-400">Goals</button>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 mt-4">
         
         <div id="tab-dash" class="space-y-8 animate-in fade-in duration-500">
-            
             <div class="glass p-4 rounded-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
                 <select id="search-type" class="bg-slate-800 text-white border border-white/10 rounded-xl px-4 py-2 outline-none text-sm font-bold focus:ring-2 focus:ring-blue-500">
                     <option class="bg-slate-900 text-white" value="github">Search GitHub</option>
@@ -232,12 +219,43 @@
             </div>
         </div>
 
+        <div id="tab-goals" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto w-full pt-4">
+            <header class="text-center mb-8">
+                <h2 class="text-4xl font-extrabold text-white">Daily Goals</h2>
+                <p class="text-slate-400 mt-2">Set targets, track progress, and crush it.</p>
+            </header>
+
+            <div id="goal-setup" class="glass p-6 rounded-3xl mb-8 flex flex-col md:flex-row gap-4 items-center border border-white/5">
+                <input id="goal-desc" type="text" placeholder="e.g. Solve LeetCode Problems" class="bg-slate-900/50 border border-white/10 rounded-xl flex-1 px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 outline-none text-white w-full">
+                <input id="goal-target" type="number" placeholder="Target (e.g. 5)" class="bg-slate-900/50 border border-white/10 rounded-xl w-full md:w-32 px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 outline-none text-white text-center">
+                <button onclick="createNewGoal()" class="bg-green-600 hover:bg-green-500 px-8 py-3 rounded-xl text-sm font-bold transition w-full md:w-auto text-white shadow-lg shadow-green-600/20">Set Goal</button>
+            </div>
+
+            <div id="active-goal-card" class="glass p-8 rounded-3xl hidden relative overflow-hidden border-t-4 border-green-500 text-center shadow-2xl">
+                <h3 id="display-goal-desc" class="text-2xl font-black text-white mb-2">Goal Title</h3>
+                <p class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-8">Progress: <span id="display-goal-count" class="text-white text-xl">0</span> <span class="text-slate-600">/</span> <span id="display-goal-target">5</span></p>
+                
+                <div class="w-full bg-slate-900 rounded-full h-4 mb-8 border border-white/10 overflow-hidden relative shadow-inner">
+                    <div id="goal-progress-bar" class="bg-green-500 h-4 rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(34,197,94,0.6)]" style="width: 0%"></div>
+                </div>
+
+                <button id="btn-increment-goal" onclick="incrementGoal()" class="bg-slate-800 hover:bg-slate-700 border border-white/10 text-white w-20 h-20 rounded-full text-4xl font-light transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(34,197,94,0.3)] hover:scale-105 active:scale-95 flex items-center justify-center mx-auto">+</button>
+                
+                <div id="goal-success-msg" class="hidden mt-4 animate-pulse">
+                    <p class="text-green-400 font-black text-2xl tracking-widest mb-2">🏆 GOAL ACHIEVED! 🏆</p>
+                    <p class="text-slate-400 text-sm mb-6">You crushed your target for today.</p>
+                    <button onclick="resetGoal()" class="text-xs text-slate-500 hover:text-white uppercase font-bold tracking-wider underline">Set a new goal</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <nav class="fixed bottom-0 left-0 right-0 p-4 glass border-t border-white/5 flex justify-around md:hidden z-50">
         <button onclick="showTab('dash')" class="flex flex-col items-center gap-1"><span class="text-[10px] font-bold uppercase tracking-widest text-white">Stats</span></button>
         <button onclick="showTab('pomo')" class="flex flex-col items-center gap-1 text-slate-400"><span class="text-[10px] font-bold uppercase tracking-widest">Pomodoro</span></button>
         <button onclick="showTab('compare')" class="flex flex-col items-center gap-1 text-purple-400"><span class="text-[10px] font-bold uppercase tracking-widest">Compare</span></button>
+        <button onclick="showTab('goals')" class="flex flex-col items-center gap-1 text-green-400"><span class="text-[10px] font-bold uppercase tracking-widest">Goals</span></button>
     </nav>
 
     <script>
@@ -270,6 +288,92 @@
             document.getElementById('sugg-btn').href = `https://leetcode.com/problems/${q.l}/`;
         }
 
+        // --- NEW GOALS LOGIC ---
+        let currentGoalProgress = 0;
+        let goalTarget = 0;
+
+        function saveGoalToLocal() {
+            const goalData = {
+                desc: document.getElementById('display-goal-desc').innerText,
+                target: goalTarget,
+                progress: currentGoalProgress
+            };
+            localStorage.setItem('devhawk-goal', JSON.stringify(goalData));
+        }
+
+        function loadGoalFromLocal() {
+            const saved = JSON.parse(localStorage.getItem('devhawk-goal'));
+            if(saved && saved.target > 0) {
+                currentGoalProgress = saved.progress;
+                goalTarget = saved.target;
+                
+                document.getElementById('display-goal-desc').innerText = saved.desc;
+                document.getElementById('display-goal-target').innerText = goalTarget;
+                document.getElementById('display-goal-count').innerText = currentGoalProgress;
+                
+                const percent = (currentGoalProgress / goalTarget) * 100;
+                document.getElementById('goal-progress-bar').style.width = `${percent}%`;
+                
+                document.getElementById('goal-setup').classList.add('hidden');
+                document.getElementById('active-goal-card').classList.remove('hidden');
+                
+                if(currentGoalProgress >= goalTarget) {
+                    document.getElementById('btn-increment-goal').classList.add('hidden');
+                    document.getElementById('goal-success-msg').classList.remove('hidden');
+                } else {
+                    document.getElementById('btn-increment-goal').classList.remove('hidden');
+                    document.getElementById('goal-success-msg').classList.add('hidden');
+                }
+            }
+        }
+
+        function createNewGoal() {
+            const desc = document.getElementById('goal-desc').value.trim();
+            const target = parseInt(document.getElementById('goal-target').value);
+            
+            if(!desc || !target || target <= 0) return alert("Enter a valid goal description and target number!");
+            
+            currentGoalProgress = 0;
+            goalTarget = target;
+            
+            document.getElementById('display-goal-desc').innerText = desc;
+            document.getElementById('display-goal-target').innerText = goalTarget;
+            document.getElementById('display-goal-count').innerText = currentGoalProgress;
+            document.getElementById('goal-progress-bar').style.width = '0%';
+            
+            document.getElementById('goal-setup').classList.add('hidden');
+            document.getElementById('active-goal-card').classList.remove('hidden');
+            document.getElementById('goal-success-msg').classList.add('hidden');
+            document.getElementById('btn-increment-goal').classList.remove('hidden');
+            
+            saveGoalToLocal();
+        }
+
+        function incrementGoal() {
+            if(currentGoalProgress < goalTarget) {
+                currentGoalProgress++;
+                document.getElementById('display-goal-count').innerText = currentGoalProgress;
+                
+                const percent = (currentGoalProgress / goalTarget) * 100;
+                document.getElementById('goal-progress-bar').style.width = `${percent}%`;
+                
+                if(currentGoalProgress === goalTarget) {
+                    document.getElementById('btn-increment-goal').classList.add('hidden');
+                    document.getElementById('goal-success-msg').classList.remove('hidden');
+                }
+                saveGoalToLocal();
+            }
+        }
+
+        function resetGoal() {
+            localStorage.removeItem('devhawk-goal');
+            document.getElementById('goal-setup').classList.remove('hidden');
+            document.getElementById('active-goal-card').classList.add('hidden');
+            document.getElementById('goal-desc').value = '';
+            document.getElementById('goal-target').value = '';
+        }
+        // --- END GOALS LOGIC ---
+
         window.onload = async () => {
             const savedGH = localStorage.getItem('my-github');
             const savedLC = localStorage.getItem('my-leetcode');
@@ -278,6 +382,9 @@
             if(savedGH) { document.getElementById('btn-link-gh').classList.add('hidden'); document.getElementById('my-gh-card').classList.remove('hidden'); fetchGHProfile(savedGH, 'my-gh'); }
             if(savedLC) { document.getElementById('btn-link-lc').classList.add('hidden'); document.getElementById('my-lc-card').classList.remove('hidden'); fetchLCProfile(savedLC, 'my-lc'); }
             if(savedCF) { document.getElementById('btn-link-cf').classList.add('hidden'); document.getElementById('my-cf-card').classList.remove('hidden'); fetchCFProfile(savedCF, 'my-cf'); }
+            
+            // Load goal from memory
+            loadGoalFromLocal();
         }
 
         async function fetchGHProfile(username, prefix) {
@@ -326,8 +433,12 @@
         }
 
         function showTab(tab) {
-            ['dash', 'pomo', 'compare'].forEach(t => { document.getElementById('tab-'+t).classList.add('hidden'); document.getElementById('btn-'+t)?.classList.remove('bg-white/10'); });
-            document.getElementById('tab-'+tab).classList.remove('hidden'); document.getElementById('btn-'+tab)?.classList.add('bg-white/10');
+            ['dash', 'pomo', 'compare', 'goals'].forEach(t => { 
+                document.getElementById('tab-'+t).classList.add('hidden'); 
+                document.getElementById('btn-'+t)?.classList.remove('bg-white/10'); 
+            });
+            document.getElementById('tab-'+tab).classList.remove('hidden'); 
+            document.getElementById('btn-'+tab)?.classList.add('bg-white/10');
         }
 
         function promptAdd(type) { const user = prompt(`Enter your ${type} username:`); if(user) { localStorage.setItem(`my-${type}`, user.trim()); location.reload(); } }
