@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,41 +7,37 @@
     <title>DevHawk | Developer Mirror</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #312e81, #020617);
+            background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #0a0f1e, #171219);
             background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite; 
+            animation: gradientShift 20s ease infinite;
             color: white;
             overflow-x: hidden;
             margin: 0;
             min-height: 100vh;
         }
-
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         .glass {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.1), 0 10px 40px 0 rgba(0, 0, 0, 0.3); 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: rgba(15, 23, 42, 0.4) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .glass:hover {
-            transform: translateY(-5px); 
-            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.2), 0 15px 40px -10px rgba(59, 130, 246, 0.4); 
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px -10px rgba(59, 130, 246, 0.2);
         }
-
         .gh-chart { filter: hue-rotate(180deg) invert(1) opacity(0.8); transition: opacity 0.3s; }
         .gh-chart:hover { opacity: 1; filter: hue-rotate(180deg) invert(1) drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); }
-
         .timer-circle {
             width: 260px; height: 260px; border-radius: 50%;
             border: 6px solid rgba(255, 255, 255, 0.05);
@@ -49,33 +46,176 @@
         }
         .timer-circle.active {
             border-color: #3b82f6;
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .timer-circle.finished {
+            border-color: #10b981;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.6), inset 0 0 20px rgba(16, 185, 129, 0.2);
+            animation: pulseGreen 1s ease-in-out 3;
+        }
+        @keyframes pulseGreen {
+            0%,100% { box-shadow: 0 0 30px rgba(16,185,129,0.6), inset 0 0 20px rgba(16,185,129,0.2); }
+            50%      { box-shadow: 0 0 60px rgba(16,185,129,0.9), inset 0 0 30px rgba(16,185,129,0.4); }
         }
         ::-webkit-scrollbar { display: none; }
+
+        /* ── TOAST NOTIFICATION ── */
+        #toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: #10b981; color: #fff; padding: 12px 24px; border-radius: 12px;
+            font-weight: 700; font-size: 14px; z-index: 9999; opacity: 0;
+            transition: all 0.3s; pointer-events: none; white-space: nowrap;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #toast.error { background: #ef4444; }
+        #toast.info  { background: #3b82f6; }
+
+        /* ── GOALS TAB STYLES ── */
+        #tab-goals {
+            --g-accent: #3b82f6; --g-accent-glow: rgba(59,130,246,0.3);
+            --g-accent2: #06b6d4; --g-surface: rgba(13,27,53,0.85);
+            --g-border: rgba(99,179,237,0.12); --g-text: #e2e8f0;
+            --g-muted: #64748b; --g-success: #10b981;
+            --g-warning: #f59e0b; --g-danger: #ef4444;
+            --g-leetcode: #ffa116; --g-github: #58a6ff;
+            --g-pomodoro: #a78bfa; --g-custom: #34d399;
+        }
+        #tab-goals * { box-sizing: border-box; }
+        .g-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 14px; margin-bottom: 28px; }
+        .g-stat-chip { background: rgba(13,27,53,0.85); border: 1px solid var(--g-border); border-radius: 12px; padding: 16px; backdrop-filter: blur(12px); text-align: center; }
+        .g-stat-val { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 600; color: #fff; }
+        .g-stat-val.accent { color: var(--g-accent2); }
+        .g-stat-val.warning { color: var(--g-warning); }
+        .g-stat-val.success { color: var(--g-success); }
+        .g-stat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--g-muted); margin-top: 4px; }
+        .g-filter-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+        .g-filter-tab { padding: 7px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; border: 1px solid var(--g-border); background: transparent; color: var(--g-muted); font-family: 'Sora', sans-serif; transition: all 0.2s; }
+        .g-filter-tab:hover { color: var(--g-text); border-color: rgba(255,255,255,0.2); }
+        .g-filter-tab.active { background: rgba(59,130,246,0.15); color: var(--g-accent2); border-color: rgba(6,182,212,0.35); }
+        .g-goals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 20px; margin-bottom: 36px; }
+        .g-goal-card { background: rgba(13,27,53,0.85); border: 1px solid var(--g-border); border-radius: 16px; padding: 22px; backdrop-filter: blur(12px); transition: all 0.25s; animation: gFadeIn 0.4s ease both; position: relative; overflow: hidden; }
+        .g-goal-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 16px 16px 0 0; }
+        .g-goal-card.leetcode::before { background: linear-gradient(90deg, var(--g-leetcode), #ff6b00); }
+        .g-goal-card.github::before  { background: linear-gradient(90deg, var(--g-github), #3b82f6); }
+        .g-goal-card.pomodoro::before { background: linear-gradient(90deg, var(--g-pomodoro), #ec4899); }
+        .g-goal-card.custom::before  { background: linear-gradient(90deg, var(--g-custom), #06b6d4); }
+        .g-goal-card:hover { transform: translateY(-3px); border-color: rgba(99,179,237,0.25); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+        @keyframes gFadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .g-goal-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+        .g-goal-tag { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; }
+        .g-goal-tag.leetcode { background: rgba(255,161,22,0.12); color: var(--g-leetcode); }
+        .g-goal-tag.github   { background: rgba(88,166,255,0.12);  color: var(--g-github); }
+        .g-goal-tag.pomodoro { background: rgba(167,139,250,0.12); color: var(--g-pomodoro); }
+        .g-goal-tag.custom   { background: rgba(52,211,153,0.12);  color: var(--g-custom); }
+        .g-goal-period { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--g-muted); background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px; }
+        .g-goal-title { font-size: 15px; font-weight: 700; color: var(--g-text); margin-bottom: 6px; line-height: 1.3; }
+        .g-goal-progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .g-goal-count { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 600; color: #fff; }
+        .g-goal-count span { font-size: 13px; color: var(--g-muted); font-family: 'Sora', sans-serif; }
+        .g-goal-pct  { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; }
+        .g-progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.07); border-radius: 99px; overflow: hidden; margin-bottom: 14px; }
+        .g-progress-fill  { height: 100%; border-radius: 99px; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+        .g-goal-card.leetcode .g-progress-fill { background: linear-gradient(90deg, var(--g-leetcode), #ff6b00); }
+        .g-goal-card.github   .g-progress-fill { background: linear-gradient(90deg, var(--g-github), #3b82f6); }
+        .g-goal-card.pomodoro .g-progress-fill { background: linear-gradient(90deg, var(--g-pomodoro), #ec4899); }
+        .g-goal-card.custom   .g-progress-fill { background: linear-gradient(90deg, var(--g-custom), #06b6d4); }
+        .g-streak-mini { display: flex; gap: 4px; flex-wrap: wrap; }
+        .g-streak-dot  { width: 10px; height: 10px; border-radius: 3px; background: rgba(255,255,255,0.06); transition: background 0.2s; }
+        .g-streak-dot.today { outline: 2px solid rgba(255,255,255,0.3); outline-offset: 1px; }
+        .g-goal-card.leetcode .g-streak-dot.done { background: var(--g-leetcode); }
+        .g-goal-card.github   .g-streak-dot.done { background: var(--g-github); }
+        .g-goal-card.pomodoro .g-streak-dot.done { background: var(--g-pomodoro); }
+        .g-goal-card.custom   .g-streak-dot.done { background: var(--g-custom); }
+        .g-goal-actions { display: flex; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--g-border); }
+        .g-btn-log { flex: 1; padding: 8px; border-radius: 8px; border: none; font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .g-btn-log-primary { background: rgba(59,130,246,0.15); color: var(--g-accent2); border: 1px solid rgba(6,182,212,0.2); }
+        .g-btn-log-primary:hover { background: rgba(59,130,246,0.25); }
+        .g-btn-log-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .g-btn-log-danger  { background: rgba(239,68,68,0.08); color: #f87171; border: 1px solid rgba(239,68,68,0.15); }
+        .g-btn-log-danger:hover { background: rgba(239,68,68,0.15); }
+        .g-section-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 2px; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .g-section-title::after { content: ''; flex: 1; height: 1px; background: var(--g-border); }
+        .g-calendar-card { background: rgba(13,27,53,0.85); border: 1px solid var(--g-border); border-radius: 16px; padding: 24px; backdrop-filter: blur(12px); margin-bottom: 36px; }
+        .g-calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .g-calendar-nav { display: flex; align-items: center; gap: 14px; }
+        .g-cal-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--g-border); background: rgba(255,255,255,0.05); color: var(--g-text); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .g-cal-btn:hover { background: rgba(255,255,255,0.1); }
+        .g-cal-month { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 2px; color: #fff; min-width: 160px; text-align: center; }
+        .g-cal-legend { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--g-muted); }
+        .g-legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .g-cal-days-header { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-bottom: 6px; }
+        .g-cal-day-label { text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--g-muted); padding: 4px 0; }
+        .g-cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+        .g-cal-cell { aspect-ratio: 1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--g-muted); cursor: pointer; transition: all 0.15s; position: relative; background: rgba(255,255,255,0.03); border: 1px solid transparent; }
+        .g-cal-cell:hover { border-color: rgba(255,255,255,0.15); color: var(--g-text); }
+        .g-cal-cell.empty { background: transparent; cursor: default; pointer-events: none; }
+        .g-cal-cell.today { border-color: var(--g-accent2) !important; color: var(--g-accent2); font-weight: 700; }
+        .g-cal-cell.level-1 { background: rgba(59,130,246,0.15); color: #93c5fd; }
+        .g-cal-cell.level-2 { background: rgba(59,130,246,0.3);  color: #60a5fa; }
+        .g-cal-cell.level-3 { background: rgba(59,130,246,0.5);  color: #3b82f6; }
+        .g-cal-cell.level-4 { background: rgba(6,182,212,0.6);   color: #fff; }
+        .g-cal-cell .g-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #1e3a5f; border: 1px solid var(--g-border); border-radius: 8px; padding: 6px 10px; font-size: 11px; white-space: nowrap; color: var(--g-text); pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 10; }
+        .g-cal-cell:hover .g-tooltip { opacity: 1; }
+        .g-btn-add { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; border-radius: 10px; color: #fff; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(59,130,246,0.3); white-space: nowrap; }
+        .g-btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(59,130,246,0.4); }
+        .g-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .g-modal-overlay.open { opacity: 1; pointer-events: all; }
+        .g-modal { background: #0d1b35; border: 1px solid rgba(99,179,237,0.2); border-radius: 20px; padding: 32px; width: 100%; max-width: 440px; transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); }
+        .g-modal-overlay.open .g-modal { transform: translateY(0); }
+        .g-modal-heading { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #fff; margin-bottom: 24px; }
+        .g-form-group { margin-bottom: 16px; }
+        .g-form-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--g-muted); margin-bottom: 8px; }
+        .g-form-input, .g-form-select { width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--g-border); border-radius: 10px; color: var(--g-text); font-family: 'Sora', sans-serif; font-size: 13px; outline: none; transition: all 0.2s; }
+        .g-form-input:focus, .g-form-select:focus { border-color: #3b82f6; background: rgba(59,130,246,0.06); box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+        .g-form-select option { background: #0d1b35; }
+        .g-type-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+        .g-type-option { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--g-border); background: rgba(255,255,255,0.03); cursor: pointer; transition: all 0.2s; text-align: center; font-size: 12px; font-weight: 600; color: var(--g-muted); }
+        .g-type-option:hover { border-color: rgba(255,255,255,0.2); }
+        .g-type-option.selected.leetcode { border-color: var(--g-leetcode); background: rgba(255,161,22,0.1); color: var(--g-leetcode); }
+        .g-type-option.selected.github   { border-color: var(--g-github);   background: rgba(88,166,255,0.1);  color: var(--g-github); }
+        .g-type-option.selected.pomodoro { border-color: var(--g-pomodoro); background: rgba(167,139,250,0.1); color: var(--g-pomodoro); }
+        .g-type-option.selected.custom   { border-color: var(--g-custom);   background: rgba(52,211,153,0.1);  color: var(--g-custom); }
+        .g-modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+        .g-btn-cancel { flex: 1; padding: 11px; border-radius: 10px; border: 1px solid var(--g-border); background: rgba(255,255,255,0.04); color: var(--g-muted); font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .g-btn-cancel:hover { color: var(--g-text); }
+        .g-btn-save { flex: 2; padding: 11px; border-radius: 10px; border: none; background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(59,130,246,0.3); }
+        .g-btn-save:hover { transform: translateY(-1px); }
+        .g-empty-state { text-align: center; padding: 60px 20px; color: var(--g-muted); }
+        .g-empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+        .g-empty-state p { font-size: 14px; }
+        @media (max-width: 600px) { .g-goals-grid { grid-template-columns: 1fr; } .g-stats-row { grid-template-columns: repeat(2,1fr); } }
     </style>
 </head>
 <body class="min-h-screen pb-24 md:pb-0">
 
+    <!-- Toast notification -->
+    <div id="toast"></div>
+
+    <!-- NAV -->
     <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
         <h1 class="text-2xl font-800 tracking-tighter text-white">DEV<span class="text-blue-500">HAWK</span></h1>
         <div class="glass px-2 py-1 rounded-2xl hidden md:flex gap-1 z-50">
-            <button onclick="showTab('dash')" id="btn-dash" class="px-6 py-2 rounded-xl text-sm font-bold transition-all bg-white/10 hover:bg-white/20">Dashboard</button>
-            <button onclick="showTab('pomo')" id="btn-pomo" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20">Deep Work</button>
+            <button onclick="showTab('dash')"    id="btn-dash"    class="px-6 py-2 rounded-xl text-sm font-bold transition-all bg-white/10 hover:bg-white/20">Dashboard</button>
+            <button onclick="showTab('pomo')"    id="btn-pomo"    class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20">Pomodoro</button>
             <button onclick="showTab('compare')" id="btn-compare" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20 text-purple-400">Compare</button>
-            <button onclick="showTab('goals')" id="btn-goals" class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20 text-green-400">Goals</button>
+            <button onclick="showTab('goals')"   id="btn-goals"   class="px-6 py-2 rounded-xl text-sm font-bold transition-all hover:bg-white/20 text-cyan-400">Goals</button>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 mt-4">
-        
+
+        <!-- DASHBOARD TAB -->
         <div id="tab-dash" class="space-y-8 animate-in fade-in duration-500">
             <div class="glass p-4 rounded-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
                 <select id="search-type" class="bg-slate-800 text-white border border-white/10 rounded-xl px-4 py-2 outline-none text-sm font-bold focus:ring-2 focus:ring-blue-500">
-                    <option class="bg-slate-900 text-white" value="github">Search GitHub</option>
-                    <option class="bg-slate-900 text-white" value="leetcode">Search LeetCode</option>
-                    <option class="bg-slate-900 text-white" value="codeforces">Search Codeforces</option>
+                    <option value="github">Search GitHub</option>
+                    <option value="leetcode">Search LeetCode</option>
+                    <option value="codeforces">Search Codeforces</option>
                 </select>
-                <input id="global-search" type="text" placeholder="Enter developer username..." class="bg-slate-900/50 border border-white/10 rounded-xl flex-1 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                <!-- FIX #10: Enter key triggers search -->
+                <input id="global-search" type="text" placeholder="Enter developer username..."
+                    class="bg-slate-900/50 border border-white/10 rounded-xl flex-1 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    onkeydown="if(event.key==='Enter') handleSearch()">
                 <button onclick="handleSearch()" class="bg-blue-600 hover:bg-blue-500 px-8 py-2 rounded-xl text-sm font-bold transition">Search</button>
             </div>
 
@@ -85,6 +225,7 @@
             </header>
 
             <div id="linked-stats-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- GitHub linked card -->
                 <div id="my-gh-card" class="glass p-6 rounded-3xl hidden border-t-4 border-blue-500 relative">
                     <div class="flex items-center gap-4 mb-6">
                         <img id="my-gh-avatar" src="" class="w-16 h-16 rounded-2xl border-2 border-blue-500">
@@ -95,17 +236,21 @@
                         <a id="my-gh-link" href="#" target="_blank" class="bg-blue-600/20 text-blue-400 p-2 rounded-xl hover:bg-blue-600 hover:text-white transition text-[10px] font-bold">Profile ↗</a>
                     </div>
                     <div class="flex justify-between bg-slate-900/80 p-4 rounded-xl mb-4 text-center border border-white/5">
-                         <div class="flex-1 border-r border-white/10"><p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Repos</p><p id="my-gh-repos" class="text-xl font-black text-white">0</p></div>
+                        <div class="flex-1 border-r border-white/10"><p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Repos</p><p id="my-gh-repos" class="text-xl font-black text-white">0</p></div>
                         <div class="flex-1"><p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Followers</p><p id="my-gh-followers" class="text-xl font-black text-white">0</p></div>
                     </div>
-                    <div class="bg-slate-900/80 p-3 rounded-xl overflow-hidden w-full overflow-x-auto text-center border border-white/5">
+                    <div class="bg-slate-900/80 p-3 rounded-xl overflow-hidden w-full text-center border border-white/5">
                         <p class="text-slate-500 text-[10px] font-bold uppercase mb-2">Contributions</p>
-                        <img id="my-gh-chart" src="" alt="Contributions" class="gh-chart h-12 mx-auto">
+                        <!-- FIX #1: ghchart fallback handled via onerror -->
+                        <img id="my-gh-chart" src="" alt="Contributions" class="gh-chart h-12 mx-auto"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <p style="display:none" class="text-slate-500 text-xs">Chart unavailable</p>
                     </div>
                 </div>
 
+                <!-- LeetCode linked card -->
                 <div id="my-lc-card" class="glass p-6 rounded-3xl hidden border-t-4 border-yellow-500 relative">
-                     <div class="flex items-center gap-4 mb-6">
+                    <div class="flex items-center gap-4 mb-6">
                         <div class="w-16 h-16 bg-yellow-500/10 rounded-2xl flex items-center justify-center border-2 border-yellow-500 shadow-inner"><span class="text-3xl">🚀</span></div>
                         <div class="flex-1">
                             <h3 id="my-lc-name" class="font-bold text-xl text-white truncate max-w-[120px]">Loading...</h3>
@@ -113,7 +258,7 @@
                         </div>
                         <a id="my-lc-link" href="#" target="_blank" class="bg-yellow-500/20 text-yellow-500 p-2 rounded-xl hover:bg-yellow-500 hover:text-black transition text-[10px] font-bold">Profile ↗</a>
                     </div>
-                     <div class="bg-slate-900/80 p-4 rounded-xl mb-4 flex justify-between text-center border border-white/5">
+                    <div class="bg-slate-900/80 p-4 rounded-xl mb-4 flex justify-between text-center border border-white/5">
                         <div class="flex-1 border-r border-white/10"><p class="text-slate-500 text-[10px] font-bold uppercase">Rank</p><p id="my-lc-rank" class="text-lg font-black text-white">N/A</p></div>
                         <div class="flex-1"><p class="text-slate-500 text-[10px] font-bold uppercase">Solved</p><p id="my-lc-total" class="text-lg font-black text-white">0</p></div>
                     </div>
@@ -124,24 +269,28 @@
                     </div>
                 </div>
 
+                <!-- Codeforces linked card -->
                 <div id="my-cf-card" class="glass p-6 rounded-3xl hidden border-t-4 border-red-500 relative">
                     <div class="flex items-center gap-4 mb-6">
-                       <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center border-2 border-red-500 shadow-inner"><span class="text-2xl font-black text-red-500">CF</span></div>
-                       <div class="flex-1">
-                           <h3 id="my-cf-name" class="font-bold text-xl text-white truncate max-w-[120px]">Loading...</h3>
-                           <button onclick="unlinkAccount('codeforces')" class="text-xs text-red-400 hover:text-red-300">Unlink CF</button>
-                       </div>
-                       <a id="my-cf-link" href="#" target="_blank" class="bg-red-500/20 text-red-500 p-2 rounded-xl hover:bg-red-500 hover:text-white transition text-[10px] font-bold">Profile ↗</a>
-                   </div>
+                        <img id="my-cf-avatar" src="" class="w-16 h-16 rounded-2xl border-2 border-red-500 bg-slate-800"
+                             onerror="this.src=''; this.style.background='#1e293b'">
+                        <div class="flex-1">
+                            <h3 id="my-cf-name" class="font-bold text-xl text-white truncate max-w-[120px]">Loading...</h3>
+                            <p id="my-cf-rank" class="text-xs text-red-400 font-bold uppercase mt-1"></p>
+                            <button onclick="unlinkAccount('codeforces')" class="text-xs text-red-400 hover:text-red-300">Unlink CF</button>
+                        </div>
+                        <a id="my-cf-link" href="#" target="_blank" class="bg-red-500/20 text-red-500 p-2 rounded-xl hover:bg-red-500 hover:text-white transition text-[10px] font-bold">Profile ↗</a>
+                    </div>
                     <div class="bg-slate-900/80 p-4 rounded-xl mb-4 flex justify-between text-center border border-white/5">
-                       <div class="flex-1 border-r border-white/10"><p class="text-slate-500 text-[10px] font-bold uppercase">Rating</p><p id="my-cf-rating" class="text-lg font-black text-white">0</p></div>
-                       <div class="flex-1"><p class="text-slate-500 text-[10px] font-bold uppercase">Rank</p><p id="my-cf-rank" class="text-md font-black text-white capitalize truncate">N/A</p></div>
-                   </div>
-                   <div class="bg-slate-900/80 p-3 rounded-xl text-center border border-white/5 border-b-2 border-red-500">
-                       <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Max Rating Achieved</p>
-                       <p id="my-cf-max" class="text-2xl font-black text-red-400">0</p>
-                   </div>
-               </div>
+                        <div class="flex-1 border-r border-white/10"><p class="text-slate-500 text-[10px] font-bold uppercase">Rating</p><p id="my-cf-rating" class="text-lg font-black text-white">0</p></div>
+                        <div class="flex-1 border-r border-white/10"><p class="text-slate-500 text-[10px] font-bold uppercase">Max Rating</p><p id="my-cf-maxrating" class="text-lg font-black text-white">0</p></div>
+                        <div class="flex-1"><p class="text-slate-500 text-[10px] font-bold uppercase">Contribution</p><p id="my-cf-contribution" class="text-lg font-black text-white">0</p></div>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-xl text-center border border-white/5 border-b-2 border-red-500">
+                        <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Max Rank Achieved</p>
+                        <p id="my-cf-maxrank" class="text-sm font-black text-red-400 uppercase">N/A</p>
+                    </div>
+                </div>
             </div>
 
             <div id="link-buttons-area" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -155,55 +304,48 @@
                     <span class="text-4xl mb-2 font-light">+</span><p class="text-xs font-bold uppercase tracking-widest text-center">Link Codeforces</p>
                 </div>
             </div>
-            
+
             <div id="result-card" class="glass p-8 rounded-3xl hidden mt-6 relative max-w-2xl mx-auto shadow-2xl">
                 <button onclick="closeResult()" class="absolute top-4 right-4 text-slate-500 text-3xl hover:text-white transition">&times;</button>
                 <div id="result-content"></div>
             </div>
         </div>
 
+        <!-- POMODORO TAB -->
         <div id="tab-pomo" class="hidden flex flex-col items-center pt-10 animate-in fade-in duration-500">
-            <h2 class="text-4xl font-extrabold mb-4 text-white">Deep Work Engine</h2>
-            
-            <div class="glass p-6 rounded-3xl w-full max-w-md mb-8 text-center border border-white/10 shadow-lg">
-                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">Current Focus Goal</h3>
-                <div id="sugg-placeholder" class="text-slate-500 italic mb-4">Click below to generate an interview question</div>
-                
-                <div id="sugg-content" class="hidden mb-4">
-                    <h4 id="sugg-title" class="text-2xl font-black text-white mb-1">Problem Title</h4>
-                    <span id="sugg-diff" class="text-xs font-black uppercase bg-slate-900 px-3 py-1 rounded-full">Difficulty</span>
-                    <a id="sugg-btn" href="#" target="_blank" class="mt-4 block bg-yellow-500/20 text-yellow-500 border border-yellow-500/50 px-4 py-2 rounded-xl font-bold text-sm hover:bg-yellow-500 hover:text-black transition">Solve on LeetCode ↗</a>
-                </div>
-                
-                <button onclick="suggestProblem()" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-xl text-sm font-bold transition shadow-md">Generate Problem</button>
+            <h2 class="text-4xl font-extrabold mb-8 text-white">Pomodoro Clock</h2>
+            <div id="circle" class="timer-circle mb-8">
+                <span id="display" class="text-6xl font-black text-white">25:00</span>
             </div>
-
-            <div id="circle" class="timer-circle mb-8"><span id="display" class="text-6xl font-black text-white">25:00</span></div>
+            <!-- FIX #4 & #3: Timer logic fixed; finish state added -->
+            <div id="pomo-status" class="mb-4 text-sm font-bold text-slate-400 h-5"></div>
             <div class="flex flex-wrap gap-4 mb-10 justify-center max-w-md">
                 <button onclick="setTime(25)" class="glass px-6 py-2 rounded-full text-sm font-bold hover:border-blue-500 transition">25m</button>
                 <button onclick="setTime(45)" class="glass px-6 py-2 rounded-full text-sm font-bold hover:border-blue-500 transition">45m</button>
                 <div class="flex items-center glass rounded-full overflow-hidden focus-within:border-blue-500 border border-transparent">
-                    <input id="custom-min" type="number" placeholder="Custom" class="w-20 bg-transparent text-center text-sm py-2 outline-none">
+                    <input id="custom-min" type="number" placeholder="Custom" min="1" max="180"
+                           class="w-20 bg-transparent text-center text-sm py-2 outline-none"
+                           onkeydown="if(event.key==='Enter') setCustom()">
                     <button onclick="setCustom()" class="bg-blue-600 px-4 py-2 text-sm font-bold hover:bg-blue-500">Set</button>
                 </div>
             </div>
             <button id="main-btn" onclick="toggleTimer()" class="w-full max-w-md py-4 bg-blue-600 rounded-2xl font-black text-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20">START FOCUS</button>
+            <button id="reset-btn" onclick="resetTimer()" class="mt-4 text-slate-500 text-sm font-bold hover:text-white transition hidden">↺ Reset</button>
         </div>
 
+        <!-- COMPARE TAB -->
         <div id="tab-compare" class="hidden animate-in fade-in duration-500">
             <header class="text-center pt-4 mb-8">
                 <h2 class="text-4xl font-extrabold text-white">Developer Battle</h2>
                 <p class="text-slate-400 mt-2">Who has the highest overall stats?</p>
             </header>
-            
             <div class="flex justify-center mb-6">
                 <select id="compare-type" class="glass text-white rounded-xl px-6 py-3 outline-none font-bold focus:border-purple-500">
-                    <option class="bg-slate-900 text-white" value="github">Battle via GitHub</option>
-                    <option class="bg-slate-900 text-white" value="leetcode">Battle via LeetCode</option>
-                    <option class="bg-slate-900 text-white" value="codeforces">Battle via Codeforces</option>
+                    <option value="github">Battle via GitHub</option>
+                    <option value="leetcode">Battle via LeetCode</option>
+                    <option value="codeforces">Battle via Codeforces</option>
                 </select>
             </div>
-
             <div class="flex flex-col md:flex-row gap-4 items-center justify-center mb-8">
                 <input id="user1" type="text" placeholder="Username 1" class="glass px-4 py-3 rounded-xl text-center w-full md:w-64 focus:border-purple-500 outline-none">
                 <span class="text-3xl font-black text-purple-500 px-4">VS</span>
@@ -212,355 +354,825 @@
             <div class="text-center mb-8">
                 <button onclick="compareUsers()" class="bg-purple-600 hover:bg-purple-500 px-10 py-4 rounded-2xl font-black text-lg transition shadow-lg shadow-purple-600/20 hover:scale-105">COMMENCE BATTLE</button>
             </div>
-
             <div id="compare-results" class="grid grid-cols-1 md:grid-cols-2 gap-8 hidden max-w-4xl mx-auto mt-10">
                 <div id="c1-card" class="glass p-6 rounded-3xl text-center shadow-lg relative"></div>
                 <div id="c2-card" class="glass p-6 rounded-3xl text-center shadow-lg relative"></div>
             </div>
         </div>
 
-        <div id="tab-goals" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto w-full pt-4">
-            <header class="text-center mb-8">
-                <h2 class="text-4xl font-extrabold text-white">Daily Goals</h2>
-                <p class="text-slate-400 mt-2">Set targets, track progress, and crush it.</p>
-            </header>
-
-            <div id="goal-setup" class="glass p-6 rounded-3xl mb-8 flex flex-col md:flex-row gap-4 items-center border border-white/5">
-                <input id="goal-desc" type="text" placeholder="e.g. Solve LeetCode Problems" class="bg-slate-900/50 border border-white/10 rounded-xl flex-1 px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 outline-none text-white w-full">
-                <input id="goal-target" type="number" placeholder="Target (e.g. 5)" class="bg-slate-900/50 border border-white/10 rounded-xl w-full md:w-32 px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 outline-none text-white text-center">
-                <button onclick="createNewGoal()" class="bg-green-600 hover:bg-green-500 px-8 py-3 rounded-xl text-sm font-bold transition w-full md:w-auto text-white shadow-lg shadow-green-600/20">Set Goal</button>
+        <!-- GOALS TAB -->
+        <div id="tab-goals" class="hidden animate-in fade-in duration-500">
+            <div class="flex items-start justify-between mb-8 flex-wrap gap-4 pt-4">
+                <div>
+                    <h2 class="text-4xl font-extrabold text-white tracking-tight" style="font-family:'Rajdhani',sans-serif;letter-spacing:3px;">GOALS</h2>
+                    <p class="text-slate-400 text-sm mt-1">Track your daily, weekly &amp; monthly targets</p>
+                </div>
+                <button class="g-btn-add" onclick="gOpenModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add Goal
+                </button>
             </div>
 
-            <div id="active-goal-card" class="glass p-8 rounded-3xl hidden relative overflow-hidden border-t-4 border-green-500 text-center shadow-2xl">
-                <h3 id="display-goal-desc" class="text-2xl font-black text-white mb-2">Goal Title</h3>
-                <p class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-8">Progress: <span id="display-goal-count" class="text-white text-xl">0</span> <span class="text-slate-600">/</span> <span id="display-goal-target">5</span></p>
-                
-                <div class="w-full bg-slate-900 rounded-full h-4 mb-8 border border-white/10 overflow-hidden relative shadow-inner">
-                    <div id="goal-progress-bar" class="bg-green-500 h-4 rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(34,197,94,0.6)]" style="width: 0%"></div>
-                </div>
+            <div class="g-stats-row">
+                <div class="g-stat-chip"><div class="g-stat-val accent" id="g-stat-streak">0</div><div class="g-stat-label">Day Streak 🔥</div></div>
+                <div class="g-stat-chip"><div class="g-stat-val success" id="g-stat-completed">0</div><div class="g-stat-label">Completed Today</div></div>
+                <div class="g-stat-chip"><div class="g-stat-val warning" id="g-stat-pending">0</div><div class="g-stat-label">Pending</div></div>
+                <div class="g-stat-chip"><div class="g-stat-val" id="g-stat-total">0</div><div class="g-stat-label">Total Goals</div></div>
+            </div>
 
-                <button id="btn-increment-goal" onclick="incrementGoal()" class="bg-slate-800 hover:bg-slate-700 border border-white/10 text-white w-20 h-20 rounded-full text-4xl font-light transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(34,197,94,0.3)] hover:scale-105 active:scale-95 flex items-center justify-center mx-auto">+</button>
-                
-                <div id="goal-success-msg" class="hidden mt-4 animate-pulse">
-                    <p class="text-green-400 font-black text-2xl tracking-widest mb-2">🏆 GOAL ACHIEVED! 🏆</p>
-                    <p class="text-slate-400 text-sm mb-6">You crushed your target for today.</p>
-                    <button onclick="resetGoal()" class="text-xs text-slate-500 hover:text-white uppercase font-bold tracking-wider underline">Set a new goal</button>
+            <!-- FIX #7: Separate type-filter and period-filter tabs -->
+            <div class="g-filter-tabs">
+                <button class="g-filter-tab active" onclick="gFilterGoals('all','all',this)">All</button>
+                <button class="g-filter-tab" onclick="gFilterGoals('period','daily',this)">Daily</button>
+                <button class="g-filter-tab" onclick="gFilterGoals('period','weekly',this)">Weekly</button>
+                <button class="g-filter-tab" onclick="gFilterGoals('period','monthly',this)">Monthly</button>
+                <button class="g-filter-tab" onclick="gFilterGoals('type','leetcode',this)">LeetCode</button>
+                <button class="g-filter-tab" onclick="gFilterGoals('type','github',this)">GitHub</button>
+                <button class="g-filter-tab" onclick="gFilterGoals('type','pomodoro',this)">Pomodoro</button>
+            </div>
+
+            <div class="g-goals-grid" id="g-goals-grid"></div>
+
+            <div class="g-section-title">ACTIVITY CALENDAR</div>
+            <div class="g-calendar-card">
+                <div class="g-calendar-header">
+                    <div class="g-calendar-nav">
+                        <button class="g-cal-btn" onclick="gChangeMonth(-1)">&#8249;</button>
+                        <div class="g-cal-month" id="g-cal-month-label">May 2026</div>
+                        <button class="g-cal-btn" onclick="gChangeMonth(1)">&#8250;</button>
+                    </div>
+                    <div class="g-cal-legend">
+                        <span>Less</span>
+                        <div class="g-legend-dot" style="background:rgba(255,255,255,0.06)"></div>
+                        <div class="g-legend-dot" style="background:rgba(59,130,246,0.2)"></div>
+                        <div class="g-legend-dot" style="background:rgba(59,130,246,0.4)"></div>
+                        <div class="g-legend-dot" style="background:rgba(6,182,212,0.7)"></div>
+                        <span>More</span>
+                    </div>
                 </div>
+                <div class="g-cal-days-header">
+                    <div class="g-cal-day-label">SUN</div><div class="g-cal-day-label">MON</div>
+                    <div class="g-cal-day-label">TUE</div><div class="g-cal-day-label">WED</div>
+                    <div class="g-cal-day-label">THU</div><div class="g-cal-day-label">FRI</div>
+                    <div class="g-cal-day-label">SAT</div>
+                </div>
+                <div class="g-cal-grid" id="g-cal-grid"></div>
             </div>
         </div>
-
     </main>
 
+    <!-- MOBILE NAV — FIX #6: Added IDs to mobile nav buttons -->
     <nav class="fixed bottom-0 left-0 right-0 p-4 glass border-t border-white/5 flex justify-around md:hidden z-50">
-        <button onclick="showTab('dash')" class="flex flex-col items-center gap-1"><span class="text-[10px] font-bold uppercase tracking-widest text-white">Stats</span></button>
-        <button onclick="showTab('pomo')" class="flex flex-col items-center gap-1 text-slate-400"><span class="text-[10px] font-bold uppercase tracking-widest">Pomodoro</span></button>
-        <button onclick="showTab('compare')" class="flex flex-col items-center gap-1 text-purple-400"><span class="text-[10px] font-bold uppercase tracking-widest">Compare</span></button>
-        <button onclick="showTab('goals')" class="flex flex-col items-center gap-1 text-green-400"><span class="text-[10px] font-bold uppercase tracking-widest">Goals</span></button>
+        <button id="mob-btn-dash"    onclick="showTab('dash')"    class="flex flex-col items-center gap-1"><span class="text-[10px] font-bold uppercase tracking-widest text-white">Stats</span></button>
+        <button id="mob-btn-pomo"    onclick="showTab('pomo')"    class="flex flex-col items-center gap-1 text-slate-400"><span class="text-[10px] font-bold uppercase tracking-widest">Pomodoro</span></button>
+        <button id="mob-btn-compare" onclick="showTab('compare')" class="flex flex-col items-center gap-1 text-purple-400"><span class="text-[10px] font-bold uppercase tracking-widest">Compare</span></button>
+        <button id="mob-btn-goals"   onclick="showTab('goals')"   class="flex flex-col items-center gap-1 text-cyan-400"><span class="text-[10px] font-bold uppercase tracking-widest">Goals</span></button>
     </nav>
 
+    <!-- LINK ACCOUNT MODAL -->
+    <div class="g-modal-overlay" id="link-modal-overlay">
+        <div class="g-modal">
+            <div class="g-modal-heading" id="link-modal-title">Link Account</div>
+            <div class="g-form-group">
+                <label class="g-form-label">Username</label>
+                <input class="g-form-input" id="link-modal-placeholder" type="text" placeholder="Enter username" autocomplete="off" />
+            </div>
+            <p id="link-modal-error" style="color:#f87171;font-size:12px;margin-top:-8px;margin-bottom:8px;min-height:16px;"></p>
+            <div class="g-modal-actions">
+                <button class="g-btn-cancel" onclick="closeLinkModal()">Cancel</button>
+                <button class="g-btn-save" id="link-modal-btn" onclick="confirmLink()">Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GOALS MODAL -->
+    <div class="g-modal-overlay" id="g-modal-overlay">
+        <div class="g-modal">
+            <div class="g-modal-heading">NEW GOAL</div>
+            <div class="g-form-group">
+                <label class="g-form-label">Goal Type</label>
+                <div class="g-type-grid">
+                    <div class="g-type-option leetcode selected" data-type="leetcode" onclick="gSelectType(this)">⚡ LeetCode</div>
+                    <div class="g-type-option github"            data-type="github"   onclick="gSelectType(this)">🐙 GitHub</div>
+                    <div class="g-type-option pomodoro"          data-type="pomodoro" onclick="gSelectType(this)">🍅 Pomodoro</div>
+                    <div class="g-type-option custom"            data-type="custom"   onclick="gSelectType(this)">✨ Custom</div>
+                </div>
+            </div>
+            <div class="g-form-group">
+                <label class="g-form-label">Goal Title</label>
+                <input class="g-form-input" id="g-modal-title-input" type="text" placeholder="e.g. Solve 5 DSA problems" />
+            </div>
+            <div class="g-form-group">
+                <label class="g-form-label">Period</label>
+                <select class="g-form-select" id="g-modal-period">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+            <div class="g-form-group">
+                <label class="g-form-label">Target</label>
+                <input class="g-form-input" id="g-modal-target" type="number" min="1" placeholder="e.g. 5" />
+            </div>
+            <div class="g-modal-actions">
+                <button class="g-btn-cancel" onclick="gCloseModal()">Cancel</button>
+                <button class="g-btn-save"   onclick="gSaveGoal()">Add Goal</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const LC_API = 'https://leetcode-api-faisalshohag.vercel.app/';
+    // ════════════════════════════════════════
+    // UTILITIES
+    // ════════════════════════════════════════
 
-        // BLIND 75 DATABASE 
-        const blind75 = [
-            { t: "Two Sum", d: "Easy", l: "two-sum", c: "text-green-400" },
-            { t: "Best Time to Buy & Sell Stock", d: "Easy", l: "best-time-to-buy-and-sell-stock", c: "text-green-400" },
-            { t: "Contains Duplicate", d: "Easy", l: "contains-duplicate", c: "text-green-400" },
-            { t: "Valid Anagram", d: "Easy", l: "valid-anagram", c: "text-green-400" },
-            { t: "Product of Array Except Self", d: "Medium", l: "product-of-array-except-self", c: "text-yellow-400" },
-            { t: "Maximum Subarray", d: "Medium", l: "maximum-subarray", c: "text-yellow-400" },
-            { t: "3Sum", d: "Medium", l: "3sum", c: "text-yellow-400" },
-            { t: "Container With Most Water", d: "Medium", l: "container-with-most-water", c: "text-yellow-400" },
-            { t: "Merge Intervals", d: "Medium", l: "merge-intervals", c: "text-yellow-400" },
-            { t: "Merge K Sorted Lists", d: "Hard", l: "merge-k-sorted-lists", c: "text-red-400" },
-            { t: "Minimum Window Substring", d: "Hard", l: "minimum-window-substring", c: "text-red-400" },
-            { t: "Reverse Linked List", d: "Easy", l: "reverse-linked-list", c: "text-green-400" },
-            { t: "Longest Repeating Character Replacement", d: "Medium", l: "longest-repeating-character-replacement", c: "text-yellow-400" }
-        ];
+    // FIX #1: Robust API fetch with CORS proxy fallback
+    const CORS = 'https://corsproxy.io/?url=';
+    const LC_API = 'https://leetcode-api-faisalshohag.vercel.app/';
 
-        function suggestProblem() {
-            const q = blind75[Math.floor(Math.random() * blind75.length)];
-            document.getElementById('sugg-placeholder').classList.add('hidden');
-            document.getElementById('sugg-content').classList.remove('hidden');
-            document.getElementById('sugg-title').innerText = q.t;
-            document.getElementById('sugg-diff').innerText = q.d;
-            document.getElementById('sugg-diff').className = `text-xs font-black uppercase px-3 py-1 rounded-full bg-slate-900 ${q.c}`;
-            document.getElementById('sugg-btn').href = `https://leetcode.com/problems/${q.l}/`;
-        }
-
-        // --- NEW GOALS LOGIC ---
-        let currentGoalProgress = 0;
-        let goalTarget = 0;
-
-        function saveGoalToLocal() {
-            const goalData = {
-                desc: document.getElementById('display-goal-desc').innerText,
-                target: goalTarget,
-                progress: currentGoalProgress
-            };
-            localStorage.setItem('devhawk-goal', JSON.stringify(goalData));
-        }
-
-        function loadGoalFromLocal() {
-            const saved = JSON.parse(localStorage.getItem('devhawk-goal'));
-            if(saved && saved.target > 0) {
-                currentGoalProgress = saved.progress;
-                goalTarget = saved.target;
-                
-                document.getElementById('display-goal-desc').innerText = saved.desc;
-                document.getElementById('display-goal-target').innerText = goalTarget;
-                document.getElementById('display-goal-count').innerText = currentGoalProgress;
-                
-                const percent = (currentGoalProgress / goalTarget) * 100;
-                document.getElementById('goal-progress-bar').style.width = `${percent}%`;
-                
-                document.getElementById('goal-setup').classList.add('hidden');
-                document.getElementById('active-goal-card').classList.remove('hidden');
-                
-                if(currentGoalProgress >= goalTarget) {
-                    document.getElementById('btn-increment-goal').classList.add('hidden');
-                    document.getElementById('goal-success-msg').classList.remove('hidden');
-                } else {
-                    document.getElementById('btn-increment-goal').classList.remove('hidden');
-                    document.getElementById('goal-success-msg').classList.add('hidden');
-                }
+    async function apiFetch(url, timeout = 8000) {
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), timeout);
+        try {
+            const res = await fetch(url, { signal: ctrl.signal });
+            clearTimeout(tid);
+            if (!res.ok) throw new Error('non-2xx');
+            return res;
+        } catch (e) {
+            clearTimeout(tid);
+            // Fallback to CORS proxy
+            const ctrl2 = new AbortController();
+            const tid2  = setTimeout(() => ctrl2.abort(), timeout);
+            try {
+                const res2 = await fetch(CORS + encodeURIComponent(url), { signal: ctrl2.signal });
+                clearTimeout(tid2);
+                return res2;
+            } catch (e2) {
+                clearTimeout(tid2);
+                throw new Error('Both direct and CORS proxy failed');
             }
         }
+    }
 
-        function createNewGoal() {
-            const desc = document.getElementById('goal-desc').value.trim();
-            const target = parseInt(document.getElementById('goal-target').value);
-            
-            if(!desc || !target || target <= 0) return alert("Enter a valid goal description and target number!");
-            
-            currentGoalProgress = 0;
-            goalTarget = target;
-            
-            document.getElementById('display-goal-desc').innerText = desc;
-            document.getElementById('display-goal-target').innerText = goalTarget;
-            document.getElementById('display-goal-count').innerText = currentGoalProgress;
-            document.getElementById('goal-progress-bar').style.width = '0%';
-            
-            document.getElementById('goal-setup').classList.add('hidden');
-            document.getElementById('active-goal-card').classList.remove('hidden');
-            document.getElementById('goal-success-msg').classList.add('hidden');
-            document.getElementById('btn-increment-goal').classList.remove('hidden');
-            
-            saveGoalToLocal();
-        }
+    // Toast helper
+    function showToast(msg, type = 'success', duration = 2500) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `show ${type}`;
+        setTimeout(() => { t.className = ''; }, duration);
+    }
 
-        function incrementGoal() {
-            if(currentGoalProgress < goalTarget) {
-                currentGoalProgress++;
-                document.getElementById('display-goal-count').innerText = currentGoalProgress;
-                
-                const percent = (currentGoalProgress / goalTarget) * 100;
-                document.getElementById('goal-progress-bar').style.width = `${percent}%`;
-                
-                if(currentGoalProgress === goalTarget) {
-                    document.getElementById('btn-increment-goal').classList.add('hidden');
-                    document.getElementById('goal-success-msg').classList.remove('hidden');
-                }
-                saveGoalToLocal();
+    // ════════════════════════════════════════
+    // TAB SYSTEM — FIX #6: Works for both desktop & mobile IDs
+    // ════════════════════════════════════════
+    function showTab(tab) {
+        ['dash','pomo','compare','goals'].forEach(t => {
+            document.getElementById('tab-' + t).classList.add('hidden');
+            document.getElementById('btn-' + t)?.classList.remove('bg-white/10');
+            document.getElementById('mob-btn-' + t)?.classList.remove('opacity-100');
+            document.getElementById('mob-btn-' + t)?.classList.add('opacity-50');
+        });
+        document.getElementById('tab-' + tab).classList.remove('hidden');
+        document.getElementById('btn-' + tab)?.classList.add('bg-white/10');
+        document.getElementById('mob-btn-' + tab)?.classList.remove('opacity-50');
+        document.getElementById('mob-btn-' + tab)?.classList.add('opacity-100');
+    }
+
+    // ════════════════════════════════════════
+    // PROFILE FETCHERS
+    // ════════════════════════════════════════
+    async function fetchGHProfile(username, prefix) {
+        try {
+            const res  = await apiFetch(`https://api.github.com/users/${username}`);
+            const data = await res.json();
+            if (data.login) {
+                document.getElementById(`${prefix}-avatar`).src       = data.avatar_url;
+                document.getElementById(`${prefix}-name`).innerText   = data.name || data.login;
+                document.getElementById(`${prefix}-repos`).innerText  = data.public_repos;
+                document.getElementById(`${prefix}-followers`).innerText = data.followers;
+                document.getElementById(`${prefix}-link`).href        = data.html_url;
+                const chartEl = document.getElementById(`${prefix}-chart`);
+                if (chartEl) chartEl.src = `https://ghchart.rshah.org/${username}`;
+            } else {
+                document.getElementById(`${prefix}-name`).innerText = 'Not Found';
             }
+        } catch (e) {
+            document.getElementById(`${prefix}-name`).innerText = 'Error loading';
         }
+    }
 
-        function resetGoal() {
-            localStorage.removeItem('devhawk-goal');
-            document.getElementById('goal-setup').classList.remove('hidden');
-            document.getElementById('active-goal-card').classList.add('hidden');
-            document.getElementById('goal-desc').value = '';
-            document.getElementById('goal-target').value = '';
+    async function fetchLCProfile(username, prefix) {
+        try {
+            const res  = await apiFetch(`${LC_API}${username}`);
+            const data = await res.json();
+            if (data.errors) throw new Error('Not Found');
+            document.getElementById(`${prefix}-name`).innerText  = username;
+            document.getElementById(`${prefix}-rank`).innerText  = data.ranking || 'N/A';
+            document.getElementById(`${prefix}-total`).innerText = data.totalSolved  || 0;
+            document.getElementById(`${prefix}-easy`).innerText  = data.easySolved   || 0;
+            document.getElementById(`${prefix}-med`).innerText   = data.mediumSolved || 0;
+            document.getElementById(`${prefix}-hard`).innerText  = data.hardSolved   || 0;
+            document.getElementById(`${prefix}-link`).href       = `https://leetcode.com/u/${username}/`;
+        } catch (e) {
+            document.getElementById(`${prefix}-name`).innerText = 'Not Found';
         }
-        // --- END GOALS LOGIC ---
+    }
 
-        window.onload = async () => {
-            const savedGH = localStorage.getItem('my-github');
-            const savedLC = localStorage.getItem('my-leetcode');
-            const savedCF = localStorage.getItem('my-codeforces');
-            
-            if(savedGH) { document.getElementById('btn-link-gh').classList.add('hidden'); document.getElementById('my-gh-card').classList.remove('hidden'); fetchGHProfile(savedGH, 'my-gh'); }
-            if(savedLC) { document.getElementById('btn-link-lc').classList.add('hidden'); document.getElementById('my-lc-card').classList.remove('hidden'); fetchLCProfile(savedLC, 'my-lc'); }
-            if(savedCF) { document.getElementById('btn-link-cf').classList.add('hidden'); document.getElementById('my-cf-card').classList.remove('hidden'); fetchCFProfile(savedCF, 'my-cf'); }
-            
-            // Load goal from memory
-            loadGoalFromLocal();
+    async function fetchCFProfile(username, prefix) {
+        try {
+            const res  = await apiFetch(`https://codeforces.com/api/user.info?handles=${username}`);
+            const data = await res.json();
+            if (data.status === 'OK') {
+                const u = data.result[0];
+                document.getElementById(`${prefix}-name`).innerText        = u.handle;
+                document.getElementById(`${prefix}-rating`).innerText      = u.rating       || 0;
+                document.getElementById(`${prefix}-rank`).innerText        = u.rank         || 'Unrated';
+                document.getElementById(`${prefix}-maxrating`).innerText   = u.maxRating    || 0;
+                document.getElementById(`${prefix}-contribution`).innerText= u.contribution || 0;
+                document.getElementById(`${prefix}-maxrank`).innerText     = u.maxRank      || 'N/A';
+                document.getElementById(`${prefix}-avatar`).src            = u.titlePhoto   || u.avatar || '';
+                document.getElementById(`${prefix}-link`).href             = `https://codeforces.com/profile/${u.handle}`;
+            } else throw new Error('Not Found');
+        } catch (e) {
+            document.getElementById(`${prefix}-name`).innerText = 'Not Found';
         }
+    }
 
-        async function fetchGHProfile(username, prefix) {
-            try {
-                const res = await fetch(`https://api.github.com/users/${username}`);
+    // ════════════════════════════════════════
+    // ACCOUNT MANAGEMENT — no prompt(), no reload()
+    // ════════════════════════════════════════
+    let _linkType = '';
+
+    function promptAdd(type) {
+        _linkType = type;
+        const labels = { github: 'GitHub', leetcode: 'LeetCode', codeforces: 'Codeforces' };
+        document.getElementById('link-modal-title').textContent  = `Link ${labels[type]}`;
+        document.getElementById('link-modal-placeholder').value  = '';
+        document.getElementById('link-modal-placeholder').placeholder = `Enter your ${labels[type]} username`;
+        document.getElementById('link-modal-error').textContent  = '';
+        document.getElementById('link-modal-overlay').classList.add('open');
+        setTimeout(() => document.getElementById('link-modal-placeholder').focus(), 100);
+    }
+
+    function closeLinkModal() {
+        document.getElementById('link-modal-overlay').classList.remove('open');
+    }
+
+    async function confirmLink() {
+        const input = document.getElementById('link-modal-placeholder');
+        const user  = input.value.trim();
+        const errEl = document.getElementById('link-modal-error');
+        const btn   = document.getElementById('link-modal-btn');
+
+        if (!user) { errEl.textContent = 'Please enter a username.'; return; }
+
+        btn.textContent = 'Connecting…';
+        btn.disabled    = true;
+        errEl.textContent = '';
+
+        try {
+            // Validate the username actually exists before linking
+            if (_linkType === 'github') {
+                const res  = await apiFetch(`https://api.github.com/users/${user}`);
                 const data = await res.json();
-                if(data.login) {
-                    document.getElementById(`${prefix}-avatar`).src = data.avatar_url;
-                    document.getElementById(`${prefix}-name`).innerText = data.name || data.login;
-                    document.getElementById(`${prefix}-repos`).innerText = data.public_repos;
-                    document.getElementById(`${prefix}-followers`).innerText = data.followers;
-                    document.getElementById(`${prefix}-link`).href = data.html_url;
-                    if(document.getElementById(`${prefix}-chart`)) document.getElementById(`${prefix}-chart`).src = `https://ghchart.rshah.org/${username}`;
-                } else { document.getElementById(`${prefix}-name`).innerText = "Not Found"; }
-            } catch(e) { console.error(e); }
-        }
-
-        async function fetchLCProfile(username, prefix) {
-            try {
-                const res = await fetch(`${LC_API}${username}`);
+                if (!data.login) throw new Error('User not found');
+            } else if (_linkType === 'leetcode') {
+                const res  = await apiFetch(`${LC_API}${user}`);
                 const data = await res.json();
-                if(data.errors) throw new Error("Not Found");
-                document.getElementById(`${prefix}-name`).innerText = username;
-                document.getElementById(`${prefix}-rank`).innerText = data.ranking || 'N/A';
-                document.getElementById(`${prefix}-total`).innerText = data.totalSolved || 0;
-                document.getElementById(`${prefix}-easy`).innerText = data.easySolved || 0;
-                document.getElementById(`${prefix}-med`).innerText = data.mediumSolved || 0;
-                document.getElementById(`${prefix}-hard`).innerText = data.hardSolved || 0;
-                document.getElementById(`${prefix}-link`).href = `https://leetcode.com/u/${username}/`;
-            } catch(e) { document.getElementById(`${prefix}-name`).innerText = "Not Found"; }
-        }
-
-        async function fetchCFProfile(username, prefix) {
-            try {
-                const res = await fetch(`https://codeforces.com/api/user.info?handles=${username}`);
+                if (data.errors) throw new Error('User not found');
+            } else {
+                const res  = await apiFetch(`https://codeforces.com/api/user.info?handles=${user}`);
                 const data = await res.json();
-                if(data.status === "OK") {
-                    const user = data.result[0];
-                    document.getElementById(`${prefix}-name`).innerText = user.handle;
-                    document.getElementById(`${prefix}-rating`).innerText = user.rating || 0;
-                    document.getElementById(`${prefix}-rank`).innerText = user.rank || 'Unrated';
-                    document.getElementById(`${prefix}-max`).innerText = user.maxRating || 0;
-                    document.getElementById(`${prefix}-link`).href = `https://codeforces.com/profile/${user.handle}`;
-                } else { throw new Error("Not Found"); }
-            } catch(e) { document.getElementById(`${prefix}-name`).innerText = "Not Found"; }
-        }
+                if (data.status !== 'OK') throw new Error('User not found');
+            }
 
-        function showTab(tab) {
-            ['dash', 'pomo', 'compare', 'goals'].forEach(t => { 
-                document.getElementById('tab-'+t).classList.add('hidden'); 
-                document.getElementById('btn-'+t)?.classList.remove('bg-white/10'); 
+            // Save and update UI in-place — no reload
+            localStorage.setItem(`my-${_linkType}`, user);
+            closeLinkModal();
+            applyLinkedAccount(_linkType, user);
+            showToast(`✅ ${user} linked successfully!`, 'success');
+        } catch (e) {
+            errEl.textContent = `❌ "${user}" not found. Check the username and try again.`;
+        } finally {
+            btn.textContent = 'Connect';
+            btn.disabled    = false;
+        }
+    }
+
+    function applyLinkedAccount(type, user) {
+        document.getElementById(`btn-link-${type === 'codeforces' ? 'cf' : type === 'github' ? 'gh' : 'lc'}`).classList.add('hidden');
+        document.getElementById(`my-${type === 'codeforces' ? 'cf' : type === 'github' ? 'gh' : 'lc'}-card`).classList.remove('hidden');
+        if (type === 'github')     fetchGHProfile(user, 'my-gh');
+        if (type === 'leetcode')   fetchLCProfile(user, 'my-lc');
+        if (type === 'codeforces') fetchCFProfile(user, 'my-cf');
+    }
+
+    function unlinkAccount(type) {
+        localStorage.removeItem(`my-${type}`);
+        const short = type === 'codeforces' ? 'cf' : type === 'github' ? 'gh' : 'lc';
+        document.getElementById(`my-${short}-card`).classList.add('hidden');
+        document.getElementById(`btn-link-${short}`).classList.remove('hidden');
+        showToast(`${type} unlinked`, 'info');
+    }
+
+    document.getElementById('link-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeLinkModal();
+    });
+    document.getElementById('link-modal-placeholder').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') confirmLink();
+    });
+
+    // ════════════════════════════════════════
+    // SEARCH — FIX #10: Proper whitespace validation
+    // ════════════════════════════════════════
+    async function handleSearch() {
+        const user = document.getElementById('global-search').value.trim();
+        const type = document.getElementById('search-type').value;
+        if (!user || user.length < 1) {
+            showToast('Please enter a username', 'error');
+            return;
+        }
+        const card    = document.getElementById('result-card');
+        const content = document.getElementById('result-content');
+        card.classList.remove('hidden');
+        card.className = 'glass p-8 rounded-3xl mt-6 relative max-w-2xl mx-auto shadow-2xl block border-t-4 border-slate-500';
+        content.innerHTML = `<div class="text-center py-8"><p class="animate-pulse text-xl font-bold">Searching ${type} for "${user}"...</p></div>`;
+        try {
+            if (type === 'github') {
+                const res  = await apiFetch(`https://api.github.com/users/${user}`);
+                const data = await res.json();
+                if (!data.login) throw new Error();
+                card.className = card.className.replace('border-slate-500','border-blue-500');
+                content.innerHTML = `
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="${data.avatar_url}" class="w-20 h-20 rounded-2xl border-2 border-blue-500 shadow-lg">
+                        <div class="flex-1"><h3 class="font-bold text-2xl">${data.name || data.login}</h3><p class="text-sm text-blue-400 font-bold">@${data.login}</p></div>
+                        <a href="${data.html_url}" target="_blank" class="bg-blue-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-blue-500 transition">View on GitHub</a>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Repos</p><p class="text-2xl font-black">${data.public_repos}</p></div>
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Followers</p><p class="text-2xl font-black">${data.followers}</p></div>
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Following</p><p class="text-2xl font-black">${data.following}</p></div>
+                    </div>`;
+            } else if (type === 'leetcode') {
+                const res  = await apiFetch(`${LC_API}${user}`);
+                const data = await res.json();
+                if (data.errors) throw new Error();
+                card.className = card.className.replace('border-slate-500','border-yellow-500');
+                content.innerHTML = `
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="w-20 h-20 bg-yellow-500/10 rounded-2xl flex items-center justify-center border-2 border-yellow-500 text-4xl shadow-xl">🚀</div>
+                        <div class="flex-1"><h3 class="font-bold text-2xl">${user}</h3><p class="text-sm text-yellow-500 font-bold uppercase">LeetCode</p></div>
+                        <a href="https://leetcode.com/u/${user}/" target="_blank" class="bg-yellow-500 text-black px-4 py-2 rounded-xl font-bold text-sm hover:bg-yellow-400 transition">View on LeetCode</a>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-center mb-4">
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Global Ranking</p><p class="text-2xl font-black">${data.ranking}</p></div>
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Total Solved</p><p class="text-2xl font-black">${data.totalSolved}</p></div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="bg-slate-900/80 p-3 rounded-xl border-b-4 border-green-500"><p class="text-slate-400 text-[10px] font-bold uppercase">Easy</p><p class="text-xl font-black text-green-400">${data.easySolved}</p></div>
+                        <div class="bg-slate-900/80 p-3 rounded-xl border-b-4 border-yellow-500"><p class="text-slate-400 text-[10px] font-bold uppercase">Medium</p><p class="text-xl font-black text-yellow-400">${data.mediumSolved}</p></div>
+                        <div class="bg-slate-900/80 p-3 rounded-xl border-b-4 border-red-500"><p class="text-slate-400 text-[10px] font-bold uppercase">Hard</p><p class="text-xl font-black text-red-400">${data.hardSolved}</p></div>
+                    </div>`;
+            } else {
+                const res  = await apiFetch(`https://codeforces.com/api/user.info?handles=${user}`);
+                const data = await res.json();
+                if (data.status !== 'OK') throw new Error();
+                const u = data.result[0];
+                card.className = card.className.replace('border-slate-500','border-red-500');
+                content.innerHTML = `
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="${u.titlePhoto || u.avatar}" class="w-20 h-20 rounded-2xl border-2 border-red-500 shadow-lg bg-slate-800">
+                        <div class="flex-1"><h3 class="font-bold text-2xl">${u.handle}</h3><p class="text-sm text-red-400 font-bold uppercase capitalize">${u.rank || 'Unrated'}</p></div>
+                        <a href="https://codeforces.com/profile/${u.handle}" target="_blank" class="bg-red-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-red-500 transition">View on CF</a>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 text-center mb-4">
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Current Rating</p><p class="text-2xl font-black text-red-400">${u.rating||0}</p></div>
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Max Rating</p><p class="text-2xl font-black text-orange-400">${u.maxRating||0}</p></div>
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Contribution</p><p class="text-2xl font-black text-green-400">${u.contribution||0}</p></div>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-xl text-center border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Max Rank Achieved</p><p class="text-lg font-black text-red-400 uppercase">${u.maxRank||'N/A'}</p></div>`;
+            }
+        } catch (e) {
+            card.className = card.className.replace('border-slate-500','border-red-500');
+            content.innerHTML = `<p class="text-red-400 text-center py-4 font-bold">User "${user}" not found or API error.</p>`;
+        }
+    }
+    function closeResult() { document.getElementById('result-card').classList.add('hidden'); }
+
+    // ════════════════════════════════════════
+    // COMPARE — FIX #5: Tie state added
+    // ════════════════════════════════════════
+    function winnerBadge(isWinner, isTie) {
+        if (isTie)     return `<div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full font-black text-sm shadow-xl">🤝 TIE</div>`;
+        if (isWinner)  return `<div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-4 py-1 rounded-full font-black text-sm shadow-xl">👑 WINNER</div>`;
+        return '';
+    }
+
+    async function compareUsers() {
+        const type = document.getElementById('compare-type').value;
+        const u1   = document.getElementById('user1').value.trim();
+        const u2   = document.getElementById('user2').value.trim();
+        if (!u1 || !u2) { showToast('Enter both usernames!', 'error'); return; }
+
+        document.getElementById('compare-results').classList.remove('hidden');
+        const c1 = document.getElementById('c1-card');
+        const c2 = document.getElementById('c2-card');
+        c1.innerHTML = `<p class="animate-pulse py-10">Fetching ${u1}...</p>`;
+        c2.innerHTML = `<p class="animate-pulse py-10">Fetching ${u2}...</p>`;
+
+        try {
+            if (type === 'github') {
+                c1.className = 'glass p-6 rounded-3xl border-t-8 border-blue-500 text-center shadow-lg relative mt-4';
+                c2.className = 'glass p-6 rounded-3xl border-t-8 border-purple-500 text-center shadow-lg relative mt-4';
+                const [r1, r2] = await Promise.all([apiFetch(`https://api.github.com/users/${u1}`), apiFetch(`https://api.github.com/users/${u2}`)]);
+                const [d1, d2] = await Promise.all([r1.json(), r2.json()]);
+                if (!d1.login || !d2.login) throw new Error();
+                const s1 = (d1.followers * 10) + (d1.public_repos * 5);
+                const s2 = (d2.followers * 10) + (d2.public_repos * 5);
+                const tie = s1 === s2;
+                const gh = (d, s, w) => `
+                    ${winnerBadge(w, tie)}
+                    <img src="${d.avatar_url}" class="w-24 h-24 rounded-full mx-auto mb-2 border-4 border-slate-800 shadow-xl mt-2">
+                    <h3 class="text-2xl font-bold mb-1">${d.login}</h3>
+                    <p class="text-blue-400 font-black mb-4 tracking-widest uppercase text-xs">Score: ${s}</p>
+                    <div class="flex justify-between bg-slate-900/80 p-3 rounded-xl mb-2 border border-white/5"><span class="text-slate-400 font-bold text-xs">Repos</span><span class="font-black">${d.public_repos}</span></div>
+                    <div class="flex justify-between bg-slate-900/80 p-3 rounded-xl mb-2 border border-white/5"><span class="text-slate-400 font-bold text-xs">Followers</span><span class="font-black">${d.followers}</span></div>
+                    <div class="flex justify-between bg-slate-900/80 p-3 rounded-xl border border-white/5"><span class="text-slate-400 font-bold text-xs">Following</span><span class="font-black">${d.following}</span></div>`;
+                c1.innerHTML = gh(d1, s1, !tie && s1 > s2);
+                c2.innerHTML = gh(d2, s2, !tie && s2 > s1);
+
+            } else if (type === 'leetcode') {
+                c1.className = 'glass p-6 rounded-3xl border-t-8 border-yellow-500 text-center shadow-lg relative mt-4';
+                c2.className = 'glass p-6 rounded-3xl border-t-8 border-orange-500 text-center shadow-lg relative mt-4';
+                const [r1, r2] = await Promise.all([apiFetch(`${LC_API}${u1}`), apiFetch(`${LC_API}${u2}`)]);
+                const [d1, d2] = await Promise.all([r1.json(), r2.json()]);
+                if (d1.errors || d2.errors) throw new Error();
+                const s1 = (d1.hardSolved*3) + (d1.mediumSolved*2) + d1.easySolved;
+                const s2 = (d2.hardSolved*3) + (d2.mediumSolved*2) + d2.easySolved;
+                const tie = s1 === s2;
+                const lc = (d, u, s, w) => `
+                    ${winnerBadge(w, tie)}
+                    <div class="w-20 h-20 bg-yellow-500/10 rounded-full mx-auto mb-2 flex items-center justify-center border-4 border-slate-800 text-3xl shadow-xl mt-2">🚀</div>
+                    <h3 class="text-2xl font-bold mb-1">${u}</h3>
+                    <p class="text-yellow-500 font-black mb-4 tracking-widest uppercase text-xs">Score: ${s}</p>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div class="bg-slate-900/80 p-2 rounded-xl border border-white/5"><span class="block text-slate-400 text-[10px] font-bold uppercase">Rank</span><span class="font-black text-sm">${d.ranking}</span></div>
+                        <div class="bg-slate-900/80 p-2 rounded-xl border border-white/5"><span class="block text-slate-400 text-[10px] font-bold uppercase">Total</span><span class="font-black text-sm">${d.totalSolved}</span></div>
+                    </div>
+                    <div class="flex justify-between bg-slate-900/80 p-2 rounded-xl mb-2 border border-white/5"><span class="text-green-400 font-bold text-xs">Easy</span><span class="font-black">${d.easySolved}</span></div>
+                    <div class="flex justify-between bg-slate-900/80 p-2 rounded-xl mb-2 border border-white/5"><span class="text-yellow-400 font-bold text-xs">Med</span><span class="font-black">${d.mediumSolved}</span></div>
+                    <div class="flex justify-between bg-slate-900/80 p-2 rounded-xl border border-white/5"><span class="text-red-400 font-bold text-xs">Hard</span><span class="font-black">${d.hardSolved}</span></div>`;
+                c1.innerHTML = lc(d1, u1, s1, !tie && s1 > s2);
+                c2.innerHTML = lc(d2, u2, s2, !tie && s2 > s1);
+
+            } else {
+                c1.className = 'glass p-6 rounded-3xl border-t-8 border-red-500 text-center shadow-lg relative mt-4';
+                c2.className = 'glass p-6 rounded-3xl border-t-8 border-pink-500 text-center shadow-lg relative mt-4';
+                const [r1, r2] = await Promise.all([apiFetch(`https://codeforces.com/api/user.info?handles=${u1}`), apiFetch(`https://codeforces.com/api/user.info?handles=${u2}`)]);
+                const [d1, d2] = await Promise.all([r1.json(), r2.json()]);
+                if (d1.status !== 'OK' || d2.status !== 'OK') throw new Error();
+                const ud1 = d1.result[0], ud2 = d2.result[0];
+                const s1 = ud1.rating || 0, s2 = ud2.rating || 0;
+                const tie = s1 === s2;
+                const cf = (d, s, w) => `
+                    ${winnerBadge(w, tie)}
+                    <div class="w-20 h-20 bg-red-500/10 rounded-full mx-auto mb-2 flex items-center justify-center border-4 border-slate-800 font-black text-red-500 mt-2 text-xl">CF</div>
+                    <h3 class="text-2xl font-bold mb-1">${d.handle}</h3>
+                    <p class="text-red-400 font-black mb-4 tracking-widest uppercase text-xs">Score: ${s}</p>
+                    <div class="flex justify-between bg-slate-900/80 p-3 rounded-xl mb-2 border border-white/5"><span class="text-slate-400 font-bold text-xs">Current Rating</span><span class="font-black">${d.rating||0}</span></div>
+                    <div class="flex justify-between bg-slate-900/80 p-3 rounded-xl border border-white/5"><span class="text-slate-400 font-bold text-xs">Max Rating</span><span class="font-black text-red-400">${d.maxRating||0}</span></div>`;
+                c1.innerHTML = cf(ud1, s1, !tie && s1 > s2);
+                c2.innerHTML = cf(ud2, s2, !tie && s2 > s1);
+            }
+        } catch (e) {
+            c1.innerHTML = `<p class="py-10 text-red-400 font-bold">User not found or API error.</p>`;
+            c2.innerHTML = `<p class="py-10 text-red-400 font-bold">User not found or API error.</p>`;
+        }
+    }
+
+    // ════════════════════════════════════════
+    // POMODORO — FIX #3 & #4: Correct countdown; finish state; reset
+    // ════════════════════════════════════════
+    let sec     = 1500;
+    let initSec = 1500;
+    let t       = null;
+
+    function setTime(m) {
+        if (t) resetTimer();
+        sec = initSec = m * 60;
+        updateDisplay();
+        document.getElementById('pomo-status').textContent = '';
+    }
+
+    function setCustom() {
+        const val = parseInt(document.getElementById('custom-min').value);
+        if (val && val > 0 && val <= 180) {
+            setTime(val);
+        } else {
+            showToast('Enter a value between 1 and 180', 'error');
+        }
+    }
+
+    function updateDisplay() {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        document.getElementById('display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function toggleTimer() {
+        const btn    = document.getElementById('main-btn');
+        const circle = document.getElementById('circle');
+        const resetB = document.getElementById('reset-btn');
+        if (t) {
+            clearInterval(t);
+            t = null;
+            btn.innerText = 'RESUME FOCUS';
+            btn.classList.replace('bg-blue-600', 'bg-green-600');
+        } else {
+            // FIX #4: Decrement first, then check; prevents going to -1
+            t = setInterval(() => {
+                if (sec <= 0) {
+                    clearInterval(t);
+                    t = null;
+                    onTimerFinish();
+                    return;
+                }
+                sec--;
+                updateDisplay();
+            }, 1000);
+            btn.innerText = 'PAUSE';
+            btn.classList.replace('bg-green-600', 'bg-blue-600');
+            circle.classList.add('active');
+            circle.classList.remove('finished');
+            resetB.classList.remove('hidden');
+        }
+    }
+
+    // FIX #3: Timer completion with visual + audio feedback
+    function onTimerFinish() {
+        const circle = document.getElementById('circle');
+        const btn    = document.getElementById('main-btn');
+        circle.classList.remove('active');
+        circle.classList.add('finished');
+        btn.innerText = 'START FOCUS';
+        btn.classList.replace('bg-blue-600', 'bg-blue-600');
+        document.getElementById('pomo-status').textContent = '🎉 Session complete! Great work!';
+        document.getElementById('display').innerText = '0:00';
+        // Beep via AudioContext
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            [0, 300, 600].forEach(delay => {
+                const osc  = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.frequency.value = 880;
+                gain.gain.setValueAtTime(0.3, ctx.currentTime + delay/1000);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay/1000 + 0.4);
+                osc.start(ctx.currentTime + delay/1000);
+                osc.stop(ctx.currentTime + delay/1000 + 0.4);
             });
-            document.getElementById('tab-'+tab).classList.remove('hidden'); 
-            document.getElementById('btn-'+tab)?.classList.add('bg-white/10');
+        } catch(e) {}
+        showToast('🎉 Pomodoro session complete!', 'success', 4000);
+    }
+
+    function resetTimer() {
+        clearInterval(t); t = null;
+        sec = initSec;
+        updateDisplay();
+        const circle = document.getElementById('circle');
+        circle.classList.remove('active','finished');
+        const btn = document.getElementById('main-btn');
+        btn.innerText = 'START FOCUS';
+        btn.classList.remove('bg-green-600');
+        btn.classList.add('bg-blue-600');
+        document.getElementById('pomo-status').textContent = '';
+        document.getElementById('reset-btn').classList.add('hidden');
+    }
+
+    // ════════════════════════════════════════
+    // GOALS — FIX #2, #7, #8, #9
+    // ════════════════════════════════════════
+
+    // FIX #9: Use incrementing counter for IDs, not Date.now()
+    let gIdCounter = 100;
+
+    // FIX #2: Load goals from localStorage
+    function gLoadGoals() {
+        const saved = localStorage.getItem('devhawk-goals');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                gIdCounter = Math.max(gIdCounter, ...parsed.map(g => g.id)) + 1;
+                return parsed;
+            } catch (e) { return gDefaultGoals(); }
+        }
+        return gDefaultGoals();
+    }
+
+    function gDefaultGoals() {
+        return [
+            { id: 1, type: 'leetcode', title: 'Solve 5 DSA problems',    period: 'daily',   target: 5,  current: 3,  streak: [1,1,1,1,1,1,1,0,1,1,1,1,1,1] },
+            { id: 2, type: 'github',   title: 'Push GitHub commits',      period: 'daily',   target: 3,  current: 3,  streak: [1,1,0,1,1,1,1,1,1,1,0,1,1,1] },
+            { id: 3, type: 'pomodoro', title: 'Study 4 hours (Pomodoro)', period: 'daily',   target: 8,  current: 5,  streak: [1,1,1,0,1,1,1,1,0,1,1,1,1,1] },
+            { id: 4, type: 'leetcode', title: 'Complete 20 problems',     period: 'weekly',  target: 20, current: 13, streak: [1,1,1,1,0,1,1,1,1,1,1,1,1,1] },
+            { id: 5, type: 'custom',   title: 'Read a CS article',        period: 'daily',   target: 1,  current: 0,  streak: [1,1,1,1,1,1,0,1,1,1,1,0,1,0] },
+        ];
+    }
+
+    // FIX #2: Save goals to localStorage
+    function gSaveGoals() {
+        localStorage.setItem('devhawk-goals', JSON.stringify(gGoals));
+    }
+
+    let gGoals         = gLoadGoals();
+    let gSelectedType  = 'leetcode';
+    let gFilterAxis    = 'all';   // 'all' | 'type' | 'period'
+    let gFilterValue   = 'all';
+    let gCalMonth      = 4;
+    let gCalYear       = 2026;
+
+    const gTypeLabels   = { leetcode: '⚡ LeetCode', github: '🐙 GitHub', pomodoro: '🍅 Pomodoro', custom: '✨ Custom' };
+    const gPeriodLabels = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' };
+
+    function gRenderGoals() {
+        const grid = document.getElementById('g-goals-grid');
+
+        // FIX #7: Correct filter — axis-aware
+        let filtered;
+        if (gFilterAxis === 'all') {
+            filtered = gGoals;
+        } else if (gFilterAxis === 'type') {
+            filtered = gGoals.filter(g => g.type === gFilterValue);
+        } else {
+            filtered = gGoals.filter(g => g.period === gFilterValue);
         }
 
-        function promptAdd(type) { const user = prompt(`Enter your ${type} username:`); if(user) { localStorage.setItem(`my-${type}`, user.trim()); location.reload(); } }
-        function unlinkAccount(type) { localStorage.removeItem(`my-${type}`); location.reload(); }
-
-        async function handleSearch() {
-            const user = document.getElementById('global-search').value.trim();
-            const type = document.getElementById('search-type').value;
-            const card = document.getElementById('result-card');
-            const content = document.getElementById('result-content');
-            if(!user) return;
-            
-            card.classList.remove('hidden');
-            card.className = "glass p-8 rounded-3xl mt-6 relative max-w-2xl mx-auto shadow-2xl block border-t-4 border-slate-500";
-            content.innerHTML = `<div class="text-center py-8"><p class="animate-pulse text-xl font-bold">Searching ${type} for ${user}...</p></div>`;
-
-            try {
-                if(type === 'github') {
-                    const res = await fetch(`https://api.github.com/users/${user}`);
-                    const data = await res.json();
-                    if(data.login) {
-                        card.classList.replace('border-slate-500', 'border-blue-500');
-                        content.innerHTML = `<div class="flex items-center gap-6 mb-6"><img src="${data.avatar_url}" class="w-20 h-20 rounded-2xl border-2 border-blue-500 shadow-lg"><div class="flex-1"><h3 class="font-bold text-2xl">${data.name || data.login}</h3><p class="text-sm text-blue-400 font-bold">@${data.login}</p></div><a href="${data.html_url}" target="_blank" class="bg-blue-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-blue-500 transition">View on GitHub</a></div><div class="grid grid-cols-3 gap-4 text-center"><div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Repos</p><p class="text-2xl font-black">${data.public_repos}</p></div><div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Followers</p><p class="text-2xl font-black">${data.followers}</p></div><div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Following</p><p class="text-2xl font-black">${data.following}</p></div></div>`;
-                    } else throw new Error();
-                } else if(type === 'leetcode') {
-                    const res = await fetch(`${LC_API}${user}`);
-                    const data = await res.json();
-                    if(!data.errors) {
-                        card.classList.replace('border-slate-500', 'border-yellow-500');
-                        content.innerHTML = `<div class="flex items-center gap-6 mb-6"><div class="w-20 h-20 bg-yellow-500/10 rounded-2xl flex items-center justify-center border-2 border-yellow-500"><span class="text-4xl">🚀</span></div><div class="flex-1"><h3 class="font-bold text-2xl">${user}</h3><p class="text-sm text-yellow-500 font-bold uppercase">LeetCode Profile</p></div><a href="https://leetcode.com/u/${user}/" target="_blank" class="bg-yellow-500 text-black px-4 py-2 rounded-xl font-bold text-sm hover:bg-yellow-400 transition">View on LeetCode</a></div><div class="grid grid-cols-2 gap-4 text-center mb-4"><div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Global Ranking</p><p class="text-2xl font-black">${data.ranking}</p></div><div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Total Solved</p><p class="text-2xl font-black">${data.totalSolved}</p></div></div><div class="grid grid-cols-3 gap-2 text-center"><div class="bg-slate-900/80 p-3 rounded-xl border-b-4 border-green-500"><p class="text-slate-400 text-[10px] font-bold uppercase">Easy</p><p class="text-xl font-black text-green-400">${data.easySolved}</p></div><div class="bg-slate-900/80 p-3 rounded-xl border-b-4 border-yellow-500"><p class="text-slate-400 text-[10px] font-bold uppercase">Medium</p><p class="text-xl font-black text-yellow-400">${data.mediumSolved}</p></div><div class="bg-slate-900/80 p-3 rounded-xl border-b-4 border-red-500"><p class="text-slate-400 text-[10px] font-bold uppercase">Hard</p><p class="text-xl font-black text-red-400">${data.hardSolved}</p></div></div>`;
-                    } else throw new Error();
-                } else {
-                    const res = await fetch(`https://codeforces.com/api/user.info?handles=${user}`);
-                    const data = await res.json();
-                    if(data.status === "OK") {
-                        const cfUser = data.result[0];
-                        card.classList.replace('border-slate-500', 'border-red-500');
-                        content.innerHTML = `<div class="flex items-center gap-6 mb-6"><div class="w-20 h-20 bg-red-500/10 rounded-2xl flex items-center justify-center border-2 border-red-500"><span class="text-4xl font-black text-red-500">CF</span></div><div class="flex-1"><h3 class="font-bold text-2xl">${cfUser.handle}</h3><p class="text-sm text-red-400 font-bold uppercase capitalize">${cfUser.rank || 'Unrated'}</p></div><a href="https://codeforces.com/profile/${cfUser.handle}" target="_blank" class="bg-red-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-red-500 transition">View on Codeforces</a></div><div class="grid grid-cols-2 gap-4 text-center"><div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Current Rating</p><p class="text-2xl font-black">${cfUser.rating || 0}</p></div><div class="bg-slate-900/80 p-4 rounded-xl border border-white/5"><p class="text-slate-500 text-xs font-bold uppercase mb-1">Max Rating</p><p class="text-2xl font-black text-red-400">${cfUser.maxRating || 0}</p></div></div>`;
-                    } else throw new Error();
-                }
-            } catch(e) { card.classList.replace('border-slate-500', 'border-red-500'); content.innerHTML = `<p class='text-red-400 text-center py-4 font-bold'>Error: User "${user}" not found.</p>`; }
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="g-empty-state" style="grid-column:1/-1"><div class="icon">🎯</div><p>No goals found. Add one!</p></div>`;
+            gUpdateStats();
+            return;
         }
-        function closeResult() { document.getElementById('result-card').classList.add('hidden'); }
 
-        async function compareUsers() {
-            const type = document.getElementById('compare-type').value;
-            const u1 = document.getElementById('user1').value.trim();
-            const u2 = document.getElementById('user2').value.trim();
-            if(!u1 || !u2) return alert("Enter both usernames!");
+        grid.innerHTML = filtered.map((g, i) => {
+            const pct   = Math.min(100, Math.round((g.current / g.target) * 100));
+            const done  = g.current >= g.target;
+            const color = done ? '#10b981' : pct > 60 ? '#06b6d4' : '#e2e8f0';
+            const dots  = Array.from({ length: 14 }, (_, j) => {
+                const isDone  = g.streak[j] === 1;
+                const isToday = j === 13;
+                return `<div class="g-streak-dot ${isDone ? 'done' : ''} ${isToday ? 'today' : ''}"></div>`;
+            }).join('');
+            return `
+            <div class="g-goal-card ${g.type}" style="animation-delay:${i*0.07}s">
+                <div class="g-goal-top">
+                    <div class="g-goal-tag ${g.type}">${gTypeLabels[g.type]}</div>
+                    <div class="g-goal-period">${gPeriodLabels[g.period]}</div>
+                </div>
+                <div class="g-goal-title">${g.title}</div>
+                <div class="g-goal-progress-label">
+                    <div class="g-goal-count">${g.current}<span> / ${g.target}</span></div>
+                    <div class="g-goal-pct" style="color:${color}">${pct}%${done ? ' ✓' : ''}</div>
+                </div>
+                <div class="g-progress-track"><div class="g-progress-fill" style="width:${pct}%"></div></div>
+                <div class="g-streak-mini">${dots}</div>
+                <div class="g-goal-actions">
+                    <button class="g-btn-log g-btn-log-primary" onclick="gLogProgress(${g.id})" ${done ? 'disabled' : ''}>${done ? '✓ Done' : '+ Log Progress'}</button>
+                    <button class="g-btn-log g-btn-log-danger"  onclick="gDeleteGoal(${g.id})">Delete</button>
+                </div>
+            </div>`;
+        }).join('');
 
-            document.getElementById('compare-results').classList.remove('hidden');
-            const c1 = document.getElementById('c1-card'); const c2 = document.getElementById('c2-card');
-            c1.innerHTML = `<p class="animate-pulse py-10">Fetching ${u1}...</p>`; c2.innerHTML = `<p class="animate-pulse py-10">Fetching ${u2}...</p>`;
+        gUpdateStats();
+    }
 
-            try {
-                if(type === 'github') {
-                    c1.className = "glass p-6 rounded-3xl border-t-8 border-blue-500 text-center shadow-lg relative mt-4"; 
-                    c2.className = "glass p-6 rounded-3xl border-t-8 border-purple-500 text-center shadow-lg relative mt-4";
-                    
-                    const [res1, res2] = await Promise.all([fetch(`https://api.github.com/users/${u1}`), fetch(`https://api.github.com/users/${u2}`)]);
-                    const d1 = await res1.json(); const d2 = await res2.json();
-                    
-                    if(!d1.login || !d2.login) throw new Error();
-                    
-                    const score1 = (d1.followers * 10) + (d1.public_repos * 5);
-                    const score2 = (d2.followers * 10) + (d2.public_repos * 5);
-                    
-                    const renderGH = (d, s, w) => `${w ? '<div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-4 py-1 rounded-full font-black text-sm shadow-xl">👑 WINNER</div>' : ''}<img src="${d.avatar_url}" class="w-24 h-24 rounded-full mx-auto mb-2 border-4 border-slate-800 shadow-xl mt-2"><h3 class="text-2xl font-bold mb-1">${d.login}</h3><p class="text-blue-400 font-black mb-4 tracking-widest uppercase text-xs">Score: ${s}</p><div class="flex justify-between bg-slate-900/80 p-3 rounded-xl mb-2 border border-white/5"><span class="text-slate-400 font-bold text-xs">Repos</span><span class="font-black text-white">${d.public_repos}</span></div><div class="flex justify-between bg-slate-900/80 p-3 rounded-xl mb-2 border border-white/5"><span class="text-slate-400 font-bold text-xs">Followers</span><span class="font-black text-white">${d.followers}</span></div><div class="flex justify-between bg-slate-900/80 p-3 rounded-xl border border-white/5"><span class="text-slate-400 font-bold text-xs">Following</span><span class="font-black text-white">${d.following}</span></div>`;
-                    
-                    c1.innerHTML = renderGH(d1, score1, score1 > score2);
-                    c2.innerHTML = renderGH(d2, score2, score2 > score1);
+    function gUpdateStats() {
+        const completed = gGoals.filter(g => g.current >= g.target).length;
+        const pending   = gGoals.filter(g => g.current <  g.target).length;
+        const streak    = gGoals.length > 0 ? Math.max(...gGoals.map(g => g.streak.filter(Boolean).length)) : 0;
+        document.getElementById('g-stat-completed').textContent = completed;
+        document.getElementById('g-stat-pending').textContent   = pending;
+        document.getElementById('g-stat-total').textContent     = gGoals.length;
+        document.getElementById('g-stat-streak').textContent    = streak;
+    }
 
-                } else if(type === 'leetcode') {
-                    c1.className = "glass p-6 rounded-3xl border-t-8 border-yellow-500 text-center shadow-lg relative mt-4"; 
-                    c2.className = "glass p-6 rounded-3xl border-t-8 border-orange-500 text-center shadow-lg relative mt-4";
-                    
-                    const [res1, res2] = await Promise.all([fetch(`${LC_API}${u1}`), fetch(`${LC_API}${u2}`)]);
-                    const d1 = await res1.json(); const d2 = await res2.json();
-                    
-                    if(d1.errors || d2.errors) throw new Error();
-                    
-                    const score1 = (d1.hardSolved * 3) + (d1.mediumSolved * 2) + (d1.easySolved * 1);
-                    const score2 = (d2.hardSolved * 3) + (d2.mediumSolved * 2) + (d2.easySolved * 1);
-                    
-                    const renderLC = (d, u, s, w) => `${w ? '<div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-4 py-1 rounded-full font-black text-sm shadow-xl">👑 WINNER</div>' : ''}<div class="w-20 h-20 bg-yellow-500/10 rounded-full mx-auto mb-2 flex items-center justify-center border-4 border-slate-800 text-3xl shadow-xl mt-2">🚀</div><h3 class="text-2xl font-bold mb-1">${u}</h3><p class="text-yellow-500 font-black mb-4 tracking-widest uppercase text-xs">Score: ${s}</p><div class="grid grid-cols-2 gap-2 mb-2"><div class="bg-slate-900/80 p-2 rounded-xl border border-white/5"><span class="block text-slate-400 text-[10px] font-bold uppercase">Rank</span><span class="font-black text-white text-sm">${d.ranking}</span></div><div class="bg-slate-900/80 p-2 rounded-xl border border-white/5"><span class="block text-slate-400 text-[10px] font-bold uppercase">Total</span><span class="font-black text-white text-sm">${d.totalSolved}</span></div></div><div class="flex justify-between bg-slate-900/80 p-2 rounded-xl mb-2 border border-white/5"><span class="text-green-400 font-bold text-xs">Easy</span><span class="font-black text-white">${d.easySolved}</span></div><div class="flex justify-between bg-slate-900/80 p-2 rounded-xl mb-2 border border-white/5"><span class="text-yellow-400 font-bold text-xs">Med</span><span class="font-black text-white">${d.mediumSolved}</span></div><div class="flex justify-between bg-slate-900/80 p-2 rounded-xl border border-white/5"><span class="text-red-400 font-bold text-xs">Hard</span><span class="font-black text-white">${d.hardSolved}</span></div>`;
-                    
-                    c1.innerHTML = renderLC(d1, u1, score1, score1 > score2);
-                    c2.innerHTML = renderLC(d2, u2, score2, score2 > score1);
-
-                } else {
-                    c1.className = "glass p-6 rounded-3xl border-t-8 border-red-500 text-center shadow-lg relative mt-4"; 
-                    c2.className = "glass p-6 rounded-3xl border-t-8 border-pink-500 text-center shadow-lg relative mt-4";
-                    
-                    const [res1, res2] = await Promise.all([fetch(`https://codeforces.com/api/user.info?handles=${u1}`), fetch(`https://codeforces.com/api/user.info?handles=${u2}`)]);
-                    const d1 = await res1.json(); const d2 = await res2.json();
-                    
-                    if(d1.status !== "OK" || d2.status !== "OK") throw new Error();
-                    
-                    const uData1 = d1.result[0]; const uData2 = d2.result[0];
-                    const score1 = uData1.rating || 0;
-                    const score2 = uData2.rating || 0;
-                    
-                    const renderCF = (d, s, w) => `${w ? '<div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-4 py-1 rounded-full font-black text-sm shadow-xl">👑 WINNER</div>' : ''}<div class="w-20 h-20 bg-red-500/10 rounded-full mx-auto mb-2 flex items-center justify-center border-4 border-slate-800 text-3xl shadow-xl font-black text-red-500 mt-2">CF</div><h3 class="text-2xl font-bold mb-1">${d.handle}</h3><p class="text-red-400 font-black mb-4 tracking-widest uppercase text-xs">Score: ${s}</p><div class="flex justify-between bg-slate-900/80 p-3 rounded-xl mb-2 border border-white/5"><span class="text-slate-400 font-bold text-xs">Current Rating</span><span class="font-black text-white">${d.rating || 0}</span></div><div class="flex justify-between bg-slate-900/80 p-3 rounded-xl border border-white/5"><span class="text-slate-400 font-bold text-xs">Max Rating</span><span class="font-black text-red-400">${d.maxRating || 0}</span></div>`;
-                    
-                    c1.innerHTML = renderCF(uData1, score1, score1 > score2);
-                    c2.innerHTML = renderCF(uData2, score2, score2 > score1);
-                }
-            } catch(e) {
-                c1.innerHTML = `<p class="py-10 text-red-400 font-bold">User missing or Error.</p>`;
-                c2.innerHTML = `<p class="py-10 text-red-400 font-bold">User missing or Error.</p>`;
+    function gLogProgress(id) {
+        const g = gGoals.find(x => x.id === id);
+        if (g && g.current < g.target) {
+            g.current++;
+            if (g.current >= g.target) {
+                g.streak[13] = 1;
+                showToast(`🎉 Goal "${g.title}" completed!`, 'success');
+            } else {
+                showToast('Progress logged!', 'info');
             }
+            gSaveGoals();  // FIX #2: persist
+            gRenderGoals();
         }
+    }
 
-        let sec = 1500; let t = null;
-        function setTime(m) { sec = m*60; update(); }
-        function setCustom() { const val = document.getElementById('custom-min').value; if(val && val > 0) { setTime(val); } }
-        function update() { const m = Math.floor(sec/60); const s = sec%60; document.getElementById('display').innerText = `${m}:${s<10?'0':''}${s}`; }
-        function toggleTimer() {
-            const btn = document.getElementById('main-btn'); const circle = document.getElementById('circle');
-            if(t) { clearInterval(t); t=null; btn.innerText="START FOCUS"; circle.classList.remove('active'); } 
-            else { t=setInterval(()=>{sec--; update(); if(sec<=0)clearInterval(t)},1000); btn.innerText="PAUSE"; circle.classList.add('active'); }
+    function gDeleteGoal(id) {
+        const g = gGoals.find(x => x.id === id);
+        if (g && confirm(`Delete "${g.title}"?`)) {
+            gGoals = gGoals.filter(x => x.id !== id);
+            gSaveGoals();  // FIX #2: persist
+            gRenderGoals();
+            showToast('Goal deleted', 'info');
         }
+    }
+
+    // FIX #7: filterGoals now takes axis + value
+    function gFilterGoals(axis, value, btn) {
+        gFilterAxis  = axis;
+        gFilterValue = value;
+        document.querySelectorAll('.g-filter-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        gRenderGoals();
+    }
+
+    function gOpenModal()  { document.getElementById('g-modal-overlay').classList.add('open'); }
+    function gCloseModal() { document.getElementById('g-modal-overlay').classList.remove('open'); }
+
+    function gSelectType(el) {
+        document.querySelectorAll('.g-type-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        gSelectedType = el.dataset.type;
+    }
+
+    function gSaveGoal() {
+        const title  = document.getElementById('g-modal-title-input').value.trim();
+        const period = document.getElementById('g-modal-period').value;
+        const target = parseInt(document.getElementById('g-modal-target').value);
+        if (!title) { showToast('Please enter a goal title', 'error'); return; }
+        if (!target || target < 1) { showToast('Please enter a valid target number', 'error'); return; }
+
+        // FIX #9: Use incrementing counter
+        gGoals.push({ id: ++gIdCounter, type: gSelectedType, title, period, target, current: 0, streak: Array(14).fill(0) });
+        gSaveGoals();  // FIX #2: persist
+        gRenderGoals();
+        gCloseModal();
+        document.getElementById('g-modal-title-input').value = '';
+        document.getElementById('g-modal-target').value      = '';
+        showToast('Goal added!', 'success');
+    }
+
+    document.getElementById('g-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) gCloseModal();
+    });
+
+    // Calendar
+    const gActivityData = {};
+    function gSeedActivity() {
+        const today = new Date(2026, 4, 15);
+        for (let i = 0; i < 60; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() - i);
+            const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+            if (Math.random() > 0.25) gActivityData[key] = Math.floor(Math.random() * 4) + 1;
+        }
+    }
+    gSeedActivity();
+
+    function gRenderCalendar() {
+        const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        document.getElementById('g-cal-month-label').textContent = `${names[gCalMonth]} ${gCalYear}`;
+        const firstDay    = new Date(gCalYear, gCalMonth, 1).getDay();
+        const daysInMonth = new Date(gCalYear, gCalMonth + 1, 0).getDate();
+        let html = '';
+        for (let i = 0; i < firstDay; i++) html += `<div class="g-cal-cell empty"></div>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+            const key     = `${gCalYear}-${gCalMonth}-${d}`;
+            const level   = gActivityData[key] || 0;
+            const isToday = gCalYear === 2026 && gCalMonth === 4 && d === 15;
+            html += `
+                <div class="g-cal-cell level-${level} ${isToday ? 'today' : ''}">
+                    ${d}
+                    <div class="g-tooltip">${d} ${names[gCalMonth].slice(0,3)}: ${level} goal${level !== 1 ? 's' : ''} completed</div>
+                </div>`;
+        }
+        document.getElementById('g-cal-grid').innerHTML = html;
+    }
+
+    function gChangeMonth(dir) {
+        gCalMonth += dir;
+        if (gCalMonth > 11) { gCalMonth = 0; gCalYear++; }
+        if (gCalMonth < 0)  { gCalMonth = 11; gCalYear--; }
+        gRenderCalendar();
+    }
+
+    // ════════════════════════════════════════
+    // INIT
+    // ════════════════════════════════════════
+    window.onload = async () => {
+        const savedGH = localStorage.getItem('my-github');
+        const savedLC = localStorage.getItem('my-leetcode');
+        const savedCF = localStorage.getItem('my-codeforces');
+        if (savedGH) { document.getElementById('btn-link-gh').classList.add('hidden'); document.getElementById('my-gh-card').classList.remove('hidden'); fetchGHProfile(savedGH, 'my-gh'); }
+        if (savedLC) { document.getElementById('btn-link-lc').classList.add('hidden'); document.getElementById('my-lc-card').classList.remove('hidden'); fetchLCProfile(savedLC, 'my-lc'); }
+        if (savedCF) { document.getElementById('btn-link-cf').classList.add('hidden'); document.getElementById('my-cf-card').classList.remove('hidden'); fetchCFProfile(savedCF, 'my-cf'); }
+        gRenderGoals();
+        gRenderCalendar();
+    };
     </script>
 </body>
 </html>
